@@ -80,7 +80,7 @@
     --leading-preset-5: 120%;
     --tracking-preset-5: 0;
     --font-preset-5: var(--font-dm-sans);
-    --weight-preset-5: 600; /* SemiBold */
+    --weight-preset-5: 500; /* SemiBold */
     --style-preset-5: normal;
 
     /* --- Text Preset 5 (Medium variant) --- */
@@ -88,7 +88,7 @@
     --leading-preset-5m: 120%;
     --tracking-preset-5m: 0;
     --font-preset-5m: var(--font-dm-sans);
-    --weight-preset-5m: 500; /* Medium */
+    --weight-preset-5m: 600; /* Medium */
     --style-preset-5m: normal;
 
     /* --- Text Preset 6 --- */
