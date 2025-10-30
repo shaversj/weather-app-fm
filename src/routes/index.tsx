@@ -1,11 +1,11 @@
+import { Button, Input, Menu, MenuButton } from "@headlessui/react";
 import { createFileRoute } from "@tanstack/react-router";
-import logo from "/logo.svg";
-import units from "/icon-units.svg";
+
+import drizzle from "/icon-drizzle.webp";
 import dropdown from "/icon-dropdown.svg";
 import search from "/icon-search.svg";
-import drizzle from "/icon-drizzle.webp";
-
-import { MenuButton, Menu, Input, Button } from "@headlessui/react";
+import units from "/icon-units.svg";
+import logo from "/logo.svg";
 
 export const Route = createFileRoute("/")({
   component: App,
@@ -16,12 +16,12 @@ function App() {
     // <!-- replaces: px-4 pt-4 md:px-6 md:pt-6 lg:px-28 lg:pt-12 -->
     <div className="min-h-screen bg-neutral-900 px-[clamp(1rem,2vw+0.5rem,7rem)] pt-[clamp(1rem,1.5vw+0.5rem,3rem)] antialiased lg:pb-20">
       <header className={"flex justify-between"}>
-        <img src={logo} alt="Logo" />
+        <img alt="Logo" src={logo} />
         <Menu>
           <MenuButton className="inline-flex items-center gap-2 rounded-md bg-neutral-800 px-3 py-1.5 text-sm/6 font-semibold text-white focus:not-data-focus:outline-none data-focus:outline data-focus:outline-white data-hover:bg-gray-700 data-open:bg-gray-700">
-            <img src={units} alt={"Units Icon"} />
+            <img alt={"Units Icon"} src={units} />
             Units
-            <img src={dropdown} alt={"Dropdown Icon"} />
+            <img alt={"Dropdown Icon"} src={dropdown} />
           </MenuButton>
         </Menu>
       </header>
@@ -30,8 +30,8 @@ function App() {
           <h1 className={"text-preset-2 mt-16 text-white"}>How's the sky looking today?</h1>
           <div className={"mx-auto mt-16 flex h-14 w-full justify-center gap-x-4"}>
             <div className={"flex items-center gap-3 rounded-xl bg-[#262540] px-4 lg:w-[526px]"}>
-              <img src={search} alt={"Search Icon"} className={"size-5"} />
-              <Input className={"text-preset-5 placeholder:text-preset-5 h-6 text-neutral-200 placeholder-neutral-200 outline-none"} placeholder={"Search for a place..."} name={"Search"} type={"text"} />
+              <img alt={"Search Icon"} className={"size-5"} src={search} />
+              <Input className={"text-preset-5 placeholder:text-preset-5 h-6 text-neutral-200 placeholder-neutral-200 outline-none"} name={"Search"} placeholder={"Search for a place..."} type={"text"} />
             </div>
             <Button className={"text-preset-5 rounded-xl bg-[#4658D9] px-4 text-neutral-200"}>Search</Button>
           </div>
@@ -40,7 +40,7 @@ function App() {
         <div className={"flex gap-x-8 pt-12"}>
           <section>
             <div className={""}>
-              <img src={"/bg-today-large.svg"} alt={"Background Today"} />
+              <img alt={"Background Today"} src={"/bg-today-large.svg"} />
               <div className={"mt-8 flex w-full gap-x-6"}>
                 <div className={"w-full space-y-6 rounded-xl bg-[#262540] p-5"}>
                   <h3 className={"text-preset-6 text-neutral-200"}>Feels Like</h3>
@@ -66,7 +66,7 @@ function App() {
             <div className={"flex gap-x-4 pt-5"}>
               <div className={"w-full space-y-4 rounded-xl bg-[#262540] py-4"}>
                 <h3 className={"text-preset-6 text-center text-neutral-200"}>Tue</h3>
-                <img src={drizzle} alt={"Drizzle Icon"} className={"mx-auto size-[60px]"} />
+                <img alt={"Drizzle Icon"} className={"mx-auto size-[60px]"} src={drizzle} />
                 <div className={"text-preset-7 flex justify-between px-2.5 text-neutral-200"}>
                   <p>20°</p>
                   <p>14°</p>
@@ -74,7 +74,7 @@ function App() {
               </div>
               <div className={"w-full space-y-4 rounded-xl bg-[#262540] py-4"}>
                 <h3 className={"text-preset-6 text-center text-neutral-200"}>Tue</h3>
-                <img src={drizzle} alt={"Drizzle Icon"} className={"mx-auto size-[60px]"} />
+                <img alt={"Drizzle Icon"} className={"mx-auto size-[60px]"} src={drizzle} />
                 <div className={"text-preset-7 flex justify-between px-2.5 text-neutral-200"}>
                   <p>20°</p>
                   <p>14°</p>
@@ -82,7 +82,7 @@ function App() {
               </div>
               <div className={"w-full space-y-4 rounded-xl bg-[#262540] py-4"}>
                 <h3 className={"text-preset-6 text-center text-neutral-200"}>Tue</h3>
-                <img src={drizzle} alt={"Drizzle Icon"} className={"mx-auto size-[60px]"} />
+                <img alt={"Drizzle Icon"} className={"mx-auto size-[60px]"} src={drizzle} />
                 <div className={"text-preset-7 flex justify-between px-2.5 text-neutral-200"}>
                   <p>20°</p>
                   <p>14°</p>
@@ -90,7 +90,7 @@ function App() {
               </div>
               <div className={"w-full space-y-4 rounded-xl bg-[#262540] py-4"}>
                 <h3 className={"text-preset-6 text-center text-neutral-200"}>Tue</h3>
-                <img src={drizzle} alt={"Drizzle Icon"} className={"mx-auto size-[60px]"} />
+                <img alt={"Drizzle Icon"} className={"mx-auto size-[60px]"} src={drizzle} />
                 <div className={"text-preset-7 flex justify-between px-2.5 text-neutral-200"}>
                   <p>20°</p>
                   <p>14°</p>
@@ -98,7 +98,7 @@ function App() {
               </div>
               <div className={"w-full space-y-4 rounded-xl bg-[#262540] py-4"}>
                 <h3 className={"text-preset-6 text-center text-neutral-200"}>Tue</h3>
-                <img src={drizzle} alt={"Drizzle Icon"} className={"mx-auto size-[60px]"} />
+                <img alt={"Drizzle Icon"} className={"mx-auto size-[60px]"} src={drizzle} />
                 <div className={"text-preset-7 flex justify-between px-2.5 text-neutral-200"}>
                   <p>20°</p>
                   <p>14°</p>
@@ -106,7 +106,7 @@ function App() {
               </div>
               <div className={"w-full space-y-4 rounded-xl bg-[#262540] py-4"}>
                 <h3 className={"text-preset-6 text-center text-neutral-200"}>Tue</h3>
-                <img src={drizzle} alt={"Drizzle Icon"} className={"mx-auto size-[60px]"} />
+                <img alt={"Drizzle Icon"} className={"mx-auto size-[60px]"} src={drizzle} />
                 <div className={"text-preset-7 flex justify-between px-2.5 text-neutral-200"}>
                   <p>20°</p>
                   <p>14°</p>
@@ -114,7 +114,7 @@ function App() {
               </div>
               <div className={"w-full space-y-4 rounded-xl bg-[#262540] py-4"}>
                 <h3 className={"text-preset-6 text-center text-neutral-200"}>Tue</h3>
-                <img src={drizzle} alt={"Drizzle Icon"} className={"mx-auto size-[60px]"} />
+                <img alt={"Drizzle Icon"} className={"mx-auto size-[60px]"} src={drizzle} />
                 <div className={"text-preset-7 flex justify-between px-2.5 text-neutral-200"}>
                   <p>20°</p>
                   <p>14°</p>
