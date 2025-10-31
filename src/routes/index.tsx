@@ -1,4 +1,4 @@
-import { Button, Input, Menu, MenuButton } from "@headlessui/react";
+import { Button, Input, Listbox, ListboxButton, ListboxOption, ListboxOptions, Menu, MenuButton } from "@headlessui/react";
 import { createFileRoute } from "@tanstack/react-router";
 
 import drizzle from "/icon-drizzle.webp";
@@ -6,12 +6,27 @@ import dropdown from "/icon-dropdown.svg";
 import search from "/icon-search.svg";
 import units from "/icon-units.svg";
 import logo from "/logo.svg";
+import sunny from "/icon-sunny.webp";
+import { useState } from "react";
+import clsx from "clsx";
 
 export const Route = createFileRoute("/")({
   component: App,
 });
 
+const days = [
+  { id: 1, name: "Monday" },
+  { id: 2, name: "Tuesday" },
+  { id: 3, name: "Wednesday" },
+  { id: 4, name: "Thursday" },
+  { id: 5, name: "Friday" },
+  { id: 6, name: "Saturday" },
+  { id: 7, name: "Sunday" },
+];
+
 function App() {
+  const [selectedDay, setselectedDay] = useState(days[0]);
+
   return (
     // <!-- replaces: px-4 pt-4 md:px-6 md:pt-6 lg:px-28 lg:pt-12 -->
     <div className="min-h-screen bg-neutral-900 px-[clamp(1rem,2vw+0.5rem,7rem)] pt-[clamp(1rem,1.5vw+0.5rem,3rem)] antialiased lg:pb-20">
@@ -123,7 +138,74 @@ function App() {
             </div>
           </section>
 
-          <section className={"min-w-[384px] rounded-xl bg-[#262540]"}></section>
+          <section className={"z-0 min-w-[384px] rounded-xl bg-[#262540] px-6"}>
+            <div className={"flex items-center justify-between pt-6"}>
+              <h2 className={"text-preset-5 text-neutral-200"}>Hourly Forecast</h2>
+
+              <div className="z-10 w-40">
+                <Listbox value={selectedDay} onChange={setselectedDay}>
+                  <ListboxButton
+                    className={clsx("relative block w-full rounded-lg bg-white/5 py-1.5 pr-8 pl-3 text-left text-sm/6 text-white", "focus:not-data-focus:outline-none data-focus:outline-2 data-focus:-outline-offset-2 data-focus:outline-white/25")}
+                  >
+                    {selectedDay.name}
+                  </ListboxButton>
+                  <ListboxOptions
+                    anchor="bottom"
+                    transition
+                    className={clsx("w-(--button-width) rounded-xl border border-white/5 bg-white/5 p-1 [--anchor-gap:--spacing(1)] focus:outline-none", "transition duration-100 ease-in data-leave:data-closed:opacity-0")}
+                  >
+                    {days.map((day) => (
+                      <ListboxOption key={day.id} value={day} className="group flex cursor-default items-center gap-2 rounded-lg px-3 py-1.5 select-none data-focus:bg-white/10">
+                        <div className="text-sm/6 text-white">{day.name}</div>
+                      </ListboxOption>
+                    ))}
+                  </ListboxOptions>
+                </Listbox>
+              </div>
+            </div>
+            <section className={"space-y-4 pt-4"}>
+              <div className={"flex h-[60px] items-center rounded-lg bg-[#3C3B5E] pr-4 pl-3"}>
+                <img src={sunny} alt={"Sunny Icon"} className={"size-10"} />
+                <p className={"text-preset-5 text-neutral-0"}>3 PM</p>
+                <p className={"text-preset-7 text-neutral-0 ml-auto"}>20°</p>
+              </div>
+              <div className={"flex h-[60px] items-center rounded-lg bg-[#3C3B5E] pr-4 pl-3"}>
+                <img src={sunny} alt={"Sunny Icon"} className={"size-10"} />
+                <p className={"text-preset-5 text-neutral-0 py-2.5"}>3 PM</p>
+                <p className={"text-preset-7 text-neutral-0 ml-auto"}>20°</p>
+              </div>
+              <div className={"flex h-[60px] items-center rounded-lg bg-[#3C3B5E] pr-4 pl-3"}>
+                <img src={sunny} alt={"Sunny Icon"} className={"size-10"} />
+                <p className={"text-preset-5 text-neutral-0 py-2.5"}>3 PM</p>
+                <p className={"text-preset-7 text-neutral-0 ml-auto"}>20°</p>
+              </div>
+              <div className={"flex h-[60px] items-center rounded-lg bg-[#3C3B5E] pr-4 pl-3"}>
+                <img src={sunny} alt={"Sunny Icon"} className={"size-10"} />
+                <p className={"text-preset-5 text-neutral-0 py-2.5"}>3 PM</p>
+                <p className={"text-preset-7 text-neutral-0 ml-auto"}>20°</p>
+              </div>
+              <div className={"flex h-[60px] items-center rounded-lg bg-[#3C3B5E] pr-4 pl-3"}>
+                <img src={sunny} alt={"Sunny Icon"} className={"size-10"} />
+                <p className={"text-preset-5 text-neutral-0 py-2.5"}>3 PM</p>
+                <p className={"text-preset-7 text-neutral-0 ml-auto"}>20°</p>
+              </div>
+              <div className={"flex h-[60px] items-center rounded-lg bg-[#3C3B5E] pr-4 pl-3"}>
+                <img src={sunny} alt={"Sunny Icon"} className={"size-10"} />
+                <p className={"text-preset-5 text-neutral-0 py-2.5"}>3 PM</p>
+                <p className={"text-preset-7 text-neutral-0 ml-auto"}>20°</p>
+              </div>
+              <div className={"flex h-[60px] items-center rounded-lg bg-[#3C3B5E] pr-4 pl-3"}>
+                <img src={sunny} alt={"Sunny Icon"} className={"size-10"} />
+                <p className={"text-preset-5 text-neutral-0 py-2.5"}>3 PM</p>
+                <p className={"text-preset-7 text-neutral-0 ml-auto"}>20°</p>
+              </div>
+              <div className={"flex h-[60px] items-center rounded-lg bg-[#3C3B5E] pr-4 pl-3"}>
+                <img src={sunny} alt={"Sunny Icon"} className={"size-10"} />
+                <p className={"text-preset-5 text-neutral-0 py-2.5"}>3 PM</p>
+                <p className={"text-preset-7 text-neutral-0 ml-auto"}>20°</p>
+              </div>
+            </section>
+          </section>
         </div>
       </main>
     </div>
