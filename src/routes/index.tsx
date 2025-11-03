@@ -1,4 +1,4 @@
-import { Button, Input, Listbox, ListboxButton, ListboxOption, ListboxOptions, Menu, MenuButton } from "@headlessui/react";
+import { Button, Input, Listbox, ListboxButton, ListboxOption, ListboxOptions, Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { createFileRoute } from "@tanstack/react-router";
 
 import drizzle from "/icon-drizzle.webp";
@@ -7,6 +7,7 @@ import search from "/icon-search.svg";
 import units from "/icon-units.svg";
 import logo from "/logo.svg";
 import sunny from "/icon-sunny.webp";
+import checkmark from "/icon-checkmark.svg";
 import { useState } from "react";
 import clsx from "clsx";
 
@@ -26,19 +27,90 @@ const days = [
 
 function App() {
   const [selectedDay, setselectedDay] = useState(days[0]);
+  const [tempUnit, setTempUnit] = useState("Celsius");
+  const [windUnit, setWindUnit] = useState("km/h");
+  const [precipUnit, setPrecipUnit] = useState("mm");
+  const [isImperial, setIsImperial] = useState(false);
+
+  function toggleUnits() {
+    if (isImperial) {
+      setTempUnit("Celsius");
+      setWindUnit("km/h");
+      setPrecipUnit("mm");
+      setIsImperial(!isImperial);
+      return;
+    } else {
+      setTempUnit("Fahrenheit");
+      setWindUnit("mph");
+      setPrecipUnit("inches");
+      setIsImperial(!isImperial);
+      return;
+    }
+  }
 
   return (
     // <!-- replaces: px-4 pt-4 md:px-6 md:pt-6 lg:px-28 lg:pt-12 -->
     <div className="min-h-screen bg-neutral-900 px-[clamp(1rem,2vw+0.5rem,7rem)] pt-[clamp(1rem,1.5vw+0.5rem,3rem)] antialiased lg:pb-20">
       <header className={"flex justify-between"}>
         <img alt="Logo" src={logo} />
-        <Menu>
-          <MenuButton className="inline-flex items-center gap-2 rounded-md bg-neutral-800 px-3 py-1.5 text-sm/6 font-semibold text-white focus:not-data-focus:outline-none data-focus:outline data-focus:outline-white data-hover:bg-gray-700 data-open:bg-gray-700">
-            <img alt={"Units Icon"} src={units} />
-            Units
-            <img alt={"Dropdown Icon"} src={dropdown} />
-          </MenuButton>
-        </Menu>
+        <div className={"flex items-center rounded-md bg-neutral-800"}>
+          <Menu>
+            <MenuButton className="text-preset-7 text-neutral-0 inline-flex items-center gap-2 bg-neutral-800 px-3 py-1.5 font-semibold focus:not-data-focus:outline-none data-focus:outline data-focus:outline-white">
+              <img alt={"Units Icon"} src={units} />
+              Units
+              <img alt={"Dropdown Icon"} src={dropdown} />
+            </MenuButton>
+
+            <MenuItems transition anchor={"bottom end"} className={"mt-2.5 w-[214px] rounded-xl bg-neutral-800 px-2 outline-none"}>
+              <button onClick={toggleUnits} className={"mt-1.5 h-[39px] w-full px-2 text-left hover:rounded-md hover:bg-gray-700"}>
+                <span className={"text-preset-7 text-neutral-0"}>{isImperial ? "Switch to Metric" : "Switch to Imperial"}</span>
+              </button>
+
+              <p className={"text-preset-8 my-2 px-2 text-neutral-300"}>Temperature</p>
+              <MenuItem>
+                <button onClick={() => setTempUnit("Celsius")} className={"text-neutral-0 text-preset-7 flex h-[39px] w-full items-center px-2 py-2 hover:rounded-md hover:bg-gray-700"}>
+                  <span>Celsius (°C)</span>
+                  {tempUnit === "Celsius" ? <img alt={"Checkmark Icon"} className={"ml-auto size-4"} src={checkmark} /> : null}
+                </button>
+              </MenuItem>
+              <MenuItem>
+                <button onClick={() => setTempUnit("Fahrenheit")} className={"text-neutral-0 text-preset-7 flex h-[39px] w-full items-center px-2 py-2 hover:rounded-md hover:bg-gray-700"}>
+                  <span>Fahrenheit (°F)</span>
+                  {tempUnit === "Fahrenheit" ? <img alt={"Checkmark Icon"} className={"ml-auto size-4"} src={checkmark} /> : null}
+                </button>
+              </MenuItem>
+
+              <hr className={"mx-2 my-1 h-[1px] border-neutral-600"} />
+              <p className={"text-preset-8 my-2 px-2 text-neutral-300"}>Wind Speed</p>
+              <MenuItem>
+                <button onClick={() => setWindUnit("km/h")} className={"text-neutral-0 text-preset-7 flex h-[39px] w-full items-center px-2 py-2 hover:rounded-md hover:bg-gray-700"}>
+                  <span>km/h</span>
+                  {windUnit === "km/h" ? <img alt={"Checkmark Icon"} className={"ml-auto size-4"} src={checkmark} /> : null}
+                </button>
+              </MenuItem>
+              <MenuItem>
+                <button onClick={() => setWindUnit("mph")} className={"text-neutral-0 text-preset-7 flex h-[39px] w-full items-center px-2 py-2 hover:rounded-md hover:bg-gray-700"}>
+                  <span>mph</span>
+                  {windUnit === "mph" ? <img alt={"Checkmark Icon"} className={"ml-auto size-4"} src={checkmark} /> : null}
+                </button>
+              </MenuItem>
+              <hr className={"mx-2 my-1 h-[1px] border-neutral-600"} />
+              <p className={"text-preset-8 my-2 px-2 text-neutral-300"}>Precipitation</p>
+              <MenuItem>
+                <button onClick={() => setPrecipUnit("mm")} className={"text-neutral-0 text-preset-7 flex h-[39px] w-full items-center px-2 py-2 hover:rounded-md hover:bg-gray-700"}>
+                  <span>Millimeters (mm)</span>
+                  {precipUnit === "mm" ? <img alt={"Checkmark Icon"} className={"ml-auto size-4"} src={checkmark} /> : null}
+                </button>
+              </MenuItem>
+              <MenuItem>
+                <button onClick={() => setPrecipUnit("inches")} className={"text-neutral-0 text-preset-7 flex h-[39px] w-full items-center px-2 py-2 hover:rounded-md hover:bg-gray-700"}>
+                  <span>Inches (in)</span>
+                  {precipUnit === "inches" ? <img alt={"Checkmark Icon"} className={"ml-auto size-4"} src={checkmark} /> : null}
+                </button>
+              </MenuItem>
+            </MenuItems>
+          </Menu>
+        </div>
       </header>
       <main className={""}>
         <div className={"grid place-items-center"}>
