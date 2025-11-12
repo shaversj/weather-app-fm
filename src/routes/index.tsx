@@ -10,27 +10,23 @@ import sunny from "/icon-sunny.webp";
 import checkmark from "/icon-checkmark.svg";
 import { useState } from "react";
 import clsx from "clsx";
+import { weatherData as data } from "../data/mydata";
 
 export const Route = createFileRoute("/")({
   component: App,
 });
 
-const days = [
-  { id: 1, name: "Monday" },
-  { id: 2, name: "Tuesday" },
-  { id: 3, name: "Wednesday" },
-  { id: 4, name: "Thursday" },
-  { id: 5, name: "Friday" },
-  { id: 6, name: "Saturday" },
-  { id: 7, name: "Sunday" },
-];
-
 function App() {
-  const [selectedDay, setselectedDay] = useState(days[0]);
+  const [selectedDay, setselectedDay] = useState(new Date(data.daily.time[0]).toLocaleDateString("en-US", { weekday: "long" }));
   const [tempUnit, setTempUnit] = useState("Celsius");
   const [windUnit, setWindUnit] = useState("km/h");
   const [precipUnit, setPrecipUnit] = useState("mm");
   const [isImperial, setIsImperial] = useState(false);
+
+  const selectedDayHandler = (day: string) => {
+    const weekday = new Date(day).toLocaleDateString("en-US", { weekday: "long" });
+    setselectedDay(weekday);
+  };
 
   function toggleUnits() {
     if (isImperial) {
@@ -126,24 +122,37 @@ function App() {
 
         <div className={"flex gap-x-8 pt-12"}>
           <section>
-            <div className={""}>
-              <img alt={"Background Today"} src={"/bg-today-large.svg"} />
+            <div>
+              <div className={"relative"}>
+                <img alt={"Background Today"} src={"/bg-today-large.svg"} className={"min-w-full"} />
+                <div className={"absolute top-1/3 ml-6 flex w-full items-center"}>
+                  <div className={""}>
+                    <p className={"text-preset-4 text-white"}>Berlin, Germany</p>
+                    <p className={"text-preset-6 pt-3 text-white opacity-80"}>Tuesday, Aug 5, 2025</p>
+                  </div>
+                  <div className={"mr-16 ml-auto flex items-center"}>
+                    <img alt={"Sunny Icon"} className={"size-[120px]"} src={sunny} />
+                    <span className={"text-preset-1 text-white"}>{data.current.temperature_2m}°</span>
+                  </div>
+                </div>
+              </div>
+              <div></div>
               <div className={"mt-8 flex w-full gap-x-6"}>
                 <div className={"w-full space-y-6 rounded-xl bg-[#262540] p-5"}>
                   <h3 className={"text-preset-6 text-neutral-200"}>Feels Like</h3>
-                  <span className={"text-preset-3 text-neutral-200"}>18°</span>
+                  <span className={"text-preset-3 text-neutral-200"}>{data.current.temperature_2m}°</span>
                 </div>
                 <div className={"w-full space-y-6 rounded-xl bg-[#262540] p-5"}>
-                  <h3 className={"text-preset-6 text-neutral-200"}>Feels Like</h3>
-                  <span className={"text-preset-3 text-neutral-200"}>18°</span>
+                  <h3 className={"text-preset-6 text-neutral-200"}>Humidity</h3>
+                  <span className={"text-preset-3 text-neutral-200"}>{data.current.relative_humidity_2m}%</span>
                 </div>
                 <div className={"w-full space-y-6 rounded-xl bg-[#262540] p-5"}>
-                  <h3 className={"text-preset-6 text-neutral-200"}>Feels Like</h3>
-                  <span className={"text-preset-3 text-neutral-200"}>18°</span>
+                  <h3 className={"text-preset-6 text-neutral-200"}>Wind</h3>
+                  <span className={"text-preset-3 text-neutral-200"}>{data.current.wind_speed_10m} km/h</span>
                 </div>
                 <div className={"w-full space-y-6 rounded-xl bg-[#262540] p-5"}>
-                  <h3 className={"text-preset-6 text-neutral-200"}>Feels Like</h3>
-                  <span className={"text-preset-3 text-neutral-200"}>18°</span>
+                  <h3 className={"text-preset-6 text-neutral-200"}>Precipitation</h3>
+                  <span className={"text-preset-3 text-neutral-200"}>{data.current.precipitation} mm</span>
                 </div>
               </div>
             </div>
@@ -151,62 +160,16 @@ function App() {
             <h2 className={"text-preset-4 pt-12 text-neutral-200"}>Daily Forecast</h2>
 
             <div className={"flex gap-x-4 pt-5"}>
-              <div className={"w-full space-y-4 rounded-xl bg-[#262540] py-4"}>
-                <h3 className={"text-preset-6 text-center text-neutral-200"}>Tue</h3>
-                <img alt={"Drizzle Icon"} className={"mx-auto size-[60px]"} src={drizzle} />
-                <div className={"text-preset-7 flex justify-between px-2.5 text-neutral-200"}>
-                  <p>20°</p>
-                  <p>14°</p>
+              {data.daily.time.map((time, index) => (
+                <div key={time} className={"w-full space-y-4 rounded-xl bg-[#262540] py-4"}>
+                  <h3 className={"text-preset-6 text-center text-neutral-200"}>{new Date(time).toLocaleDateString("en-US", { weekday: "short" })}</h3>
+                  <img alt={"Drizzle Icon"} className={"mx-auto size-[60px]"} src={drizzle} />
+                  <div className={"text-preset-7 flex justify-between px-2.5 text-neutral-200"}>
+                    <p>{isImperial ? Math.round(((data.daily.temperature_2m_max[index] - 32) * 5) / 9).toPrecision(2) : data.daily.temperature_2m_max[index].toPrecision(2)}°</p>
+                    <p>{isImperial ? Math.round(((data.daily.temperature_2m_min[index] - 32) * 5) / 9).toPrecision(2) : data.daily.temperature_2m_min[index].toPrecision(2)}°</p>
+                  </div>
                 </div>
-              </div>
-              <div className={"w-full space-y-4 rounded-xl bg-[#262540] py-4"}>
-                <h3 className={"text-preset-6 text-center text-neutral-200"}>Tue</h3>
-                <img alt={"Drizzle Icon"} className={"mx-auto size-[60px]"} src={drizzle} />
-                <div className={"text-preset-7 flex justify-between px-2.5 text-neutral-200"}>
-                  <p>20°</p>
-                  <p>14°</p>
-                </div>
-              </div>
-              <div className={"w-full space-y-4 rounded-xl bg-[#262540] py-4"}>
-                <h3 className={"text-preset-6 text-center text-neutral-200"}>Tue</h3>
-                <img alt={"Drizzle Icon"} className={"mx-auto size-[60px]"} src={drizzle} />
-                <div className={"text-preset-7 flex justify-between px-2.5 text-neutral-200"}>
-                  <p>20°</p>
-                  <p>14°</p>
-                </div>
-              </div>
-              <div className={"w-full space-y-4 rounded-xl bg-[#262540] py-4"}>
-                <h3 className={"text-preset-6 text-center text-neutral-200"}>Tue</h3>
-                <img alt={"Drizzle Icon"} className={"mx-auto size-[60px]"} src={drizzle} />
-                <div className={"text-preset-7 flex justify-between px-2.5 text-neutral-200"}>
-                  <p>20°</p>
-                  <p>14°</p>
-                </div>
-              </div>
-              <div className={"w-full space-y-4 rounded-xl bg-[#262540] py-4"}>
-                <h3 className={"text-preset-6 text-center text-neutral-200"}>Tue</h3>
-                <img alt={"Drizzle Icon"} className={"mx-auto size-[60px]"} src={drizzle} />
-                <div className={"text-preset-7 flex justify-between px-2.5 text-neutral-200"}>
-                  <p>20°</p>
-                  <p>14°</p>
-                </div>
-              </div>
-              <div className={"w-full space-y-4 rounded-xl bg-[#262540] py-4"}>
-                <h3 className={"text-preset-6 text-center text-neutral-200"}>Tue</h3>
-                <img alt={"Drizzle Icon"} className={"mx-auto size-[60px]"} src={drizzle} />
-                <div className={"text-preset-7 flex justify-between px-2.5 text-neutral-200"}>
-                  <p>20°</p>
-                  <p>14°</p>
-                </div>
-              </div>
-              <div className={"w-full space-y-4 rounded-xl bg-[#262540] py-4"}>
-                <h3 className={"text-preset-6 text-center text-neutral-200"}>Tue</h3>
-                <img alt={"Drizzle Icon"} className={"mx-auto size-[60px]"} src={drizzle} />
-                <div className={"text-preset-7 flex justify-between px-2.5 text-neutral-200"}>
-                  <p>20°</p>
-                  <p>14°</p>
-                </div>
-              </div>
+              ))}
             </div>
           </section>
 
@@ -215,20 +178,20 @@ function App() {
               <h2 className={"text-preset-5 text-neutral-200"}>Hourly Forecast</h2>
 
               <div className="z-10 w-40">
-                <Listbox value={selectedDay} onChange={setselectedDay}>
+                <Listbox value={selectedDay} onChange={selectedDayHandler}>
                   <ListboxButton
                     className={clsx("relative block w-full rounded-lg bg-white/5 py-1.5 pr-8 pl-3 text-left text-sm/6 text-white", "focus:not-data-focus:outline-none data-focus:outline-2 data-focus:-outline-offset-2 data-focus:outline-white/25")}
                   >
-                    {selectedDay.name}
+                    {selectedDay}
                   </ListboxButton>
                   <ListboxOptions
                     anchor="bottom"
                     transition
                     className={clsx("w-(--button-width) rounded-xl border border-white/5 bg-white/5 p-1 [--anchor-gap:--spacing(1)] focus:outline-none", "transition duration-100 ease-in data-leave:data-closed:opacity-0")}
                   >
-                    {days.map((day) => (
-                      <ListboxOption key={day.id} value={day} className="group flex cursor-default items-center gap-2 rounded-lg px-3 py-1.5 select-none data-focus:bg-white/10">
-                        <div className="text-sm/6 text-white">{day.name}</div>
+                    {data.daily.time.map((time, index) => (
+                      <ListboxOption key={time} value={time} className="group flex cursor-default items-center gap-2 rounded-lg px-3 py-1.5 select-none data-focus:bg-white/10">
+                        <div className="text-sm/6 text-white">{new Date(time).toLocaleDateString("en-US", { weekday: "long" })}</div>
                       </ListboxOption>
                     ))}
                   </ListboxOptions>
@@ -236,46 +199,22 @@ function App() {
               </div>
             </div>
             <section className={"space-y-4 pt-4"}>
-              <div className={"flex h-[60px] items-center rounded-lg bg-[#3C3B5E] pr-4 pl-3"}>
-                <img src={sunny} alt={"Sunny Icon"} className={"size-10"} />
-                <p className={"text-preset-5 text-neutral-0"}>3 PM</p>
-                <p className={"text-preset-7 text-neutral-0 ml-auto"}>20°</p>
-              </div>
-              <div className={"flex h-[60px] items-center rounded-lg bg-[#3C3B5E] pr-4 pl-3"}>
-                <img src={sunny} alt={"Sunny Icon"} className={"size-10"} />
-                <p className={"text-preset-5 text-neutral-0 py-2.5"}>3 PM</p>
-                <p className={"text-preset-7 text-neutral-0 ml-auto"}>20°</p>
-              </div>
-              <div className={"flex h-[60px] items-center rounded-lg bg-[#3C3B5E] pr-4 pl-3"}>
-                <img src={sunny} alt={"Sunny Icon"} className={"size-10"} />
-                <p className={"text-preset-5 text-neutral-0 py-2.5"}>3 PM</p>
-                <p className={"text-preset-7 text-neutral-0 ml-auto"}>20°</p>
-              </div>
-              <div className={"flex h-[60px] items-center rounded-lg bg-[#3C3B5E] pr-4 pl-3"}>
-                <img src={sunny} alt={"Sunny Icon"} className={"size-10"} />
-                <p className={"text-preset-5 text-neutral-0 py-2.5"}>3 PM</p>
-                <p className={"text-preset-7 text-neutral-0 ml-auto"}>20°</p>
-              </div>
-              <div className={"flex h-[60px] items-center rounded-lg bg-[#3C3B5E] pr-4 pl-3"}>
-                <img src={sunny} alt={"Sunny Icon"} className={"size-10"} />
-                <p className={"text-preset-5 text-neutral-0 py-2.5"}>3 PM</p>
-                <p className={"text-preset-7 text-neutral-0 ml-auto"}>20°</p>
-              </div>
-              <div className={"flex h-[60px] items-center rounded-lg bg-[#3C3B5E] pr-4 pl-3"}>
-                <img src={sunny} alt={"Sunny Icon"} className={"size-10"} />
-                <p className={"text-preset-5 text-neutral-0 py-2.5"}>3 PM</p>
-                <p className={"text-preset-7 text-neutral-0 ml-auto"}>20°</p>
-              </div>
-              <div className={"flex h-[60px] items-center rounded-lg bg-[#3C3B5E] pr-4 pl-3"}>
-                <img src={sunny} alt={"Sunny Icon"} className={"size-10"} />
-                <p className={"text-preset-5 text-neutral-0 py-2.5"}>3 PM</p>
-                <p className={"text-preset-7 text-neutral-0 ml-auto"}>20°</p>
-              </div>
-              <div className={"flex h-[60px] items-center rounded-lg bg-[#3C3B5E] pr-4 pl-3"}>
-                <img src={sunny} alt={"Sunny Icon"} className={"size-10"} />
-                <p className={"text-preset-5 text-neutral-0 py-2.5"}>3 PM</p>
-                <p className={"text-preset-7 text-neutral-0 ml-auto"}>20°</p>
-              </div>
+              {data.hourly.time.map((time, index) => {
+                const day = new Date(time).toLocaleDateString("en-US", { weekday: "long" });
+                if (day === selectedDay) {
+                  const currentHour = new Date().getHours();
+                  const timeHour = new Date(time).getHours();
+                  if (timeHour >= currentHour && timeHour < currentHour + 8) {
+                    return (
+                      <div key={time} className={"flex h-[60px] items-center rounded-lg bg-[#3C3B5E] pr-4 pl-3"}>
+                        <img alt={"Sunny Icon"} className={"size-10"} src={sunny} />
+                        <p className={"text-preset-5 text-neutral-0"}>{new Date(time).toLocaleTimeString("en-US", { hour: "numeric", hour12: true })}</p>
+                        <p className={"text-preset-7 text-neutral-0 ml-auto"}>{isImperial ? Math.round(((data.hourly.temperature_2m[index] - 32) * 5) / 9).toPrecision(2) : data.hourly.temperature_2m[index].toPrecision(2)}°</p>
+                      </div>
+                    );
+                  }
+                }
+              })}
             </section>
           </section>
         </div>
