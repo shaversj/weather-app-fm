@@ -1,16 +1,17 @@
 import { Button, Input, Listbox, ListboxButton, ListboxOption, ListboxOptions, Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { createFileRoute } from "@tanstack/react-router";
+import clsx from "clsx";
+import { useState } from "react";
 
+import { weatherData as data } from "../data/mydata";
+
+import checkmark from "/icon-checkmark.svg";
 import drizzle from "/icon-drizzle.webp";
 import dropdown from "/icon-dropdown.svg";
 import search from "/icon-search.svg";
+import sunny from "/icon-sunny.webp";
 import units from "/icon-units.svg";
 import logo from "/logo.svg";
-import sunny from "/icon-sunny.webp";
-import checkmark from "/icon-checkmark.svg";
-import { useState } from "react";
-import clsx from "clsx";
-import { weatherData as data } from "../data/mydata";
 
 export const Route = createFileRoute("/")({
   component: App,
@@ -57,20 +58,20 @@ function App() {
               <img alt={"Dropdown Icon"} src={dropdown} />
             </MenuButton>
 
-            <MenuItems transition anchor={"bottom end"} className={"mt-2.5 w-[214px] rounded-xl bg-neutral-800 px-2 outline-none"}>
-              <button onClick={toggleUnits} className={"mt-1.5 h-[39px] w-full px-2 text-left hover:rounded-md hover:bg-gray-700"}>
+            <MenuItems anchor={"bottom end"} className={"mt-2.5 w-[214px] rounded-xl bg-neutral-800 px-2 outline-none"} transition>
+              <button className={"mt-1.5 h-[39px] w-full px-2 text-left hover:rounded-md hover:bg-gray-700"} onClick={toggleUnits}>
                 <span className={"text-preset-7 text-neutral-0"}>{isImperial ? "Switch to Metric" : "Switch to Imperial"}</span>
               </button>
 
               <p className={"text-preset-8 my-2 px-2 text-neutral-300"}>Temperature</p>
               <MenuItem>
-                <button onClick={() => setTempUnit("Celsius")} className={"text-neutral-0 text-preset-7 flex h-[39px] w-full items-center px-2 py-2 hover:rounded-md hover:bg-gray-700"}>
+                <button className={"text-neutral-0 text-preset-7 flex h-[39px] w-full items-center px-2 py-2 hover:rounded-md hover:bg-gray-700"} onClick={() => setTempUnit("Celsius")}>
                   <span>Celsius (°C)</span>
                   {tempUnit === "Celsius" ? <img alt={"Checkmark Icon"} className={"ml-auto size-4"} src={checkmark} /> : null}
                 </button>
               </MenuItem>
               <MenuItem>
-                <button onClick={() => setTempUnit("Fahrenheit")} className={"text-neutral-0 text-preset-7 flex h-[39px] w-full items-center px-2 py-2 hover:rounded-md hover:bg-gray-700"}>
+                <button className={"text-neutral-0 text-preset-7 flex h-[39px] w-full items-center px-2 py-2 hover:rounded-md hover:bg-gray-700"} onClick={() => setTempUnit("Fahrenheit")}>
                   <span>Fahrenheit (°F)</span>
                   {tempUnit === "Fahrenheit" ? <img alt={"Checkmark Icon"} className={"ml-auto size-4"} src={checkmark} /> : null}
                 </button>
@@ -79,13 +80,13 @@ function App() {
               <hr className={"mx-2 my-1 h-[1px] border-neutral-600"} />
               <p className={"text-preset-8 my-2 px-2 text-neutral-300"}>Wind Speed</p>
               <MenuItem>
-                <button onClick={() => setWindUnit("km/h")} className={"text-neutral-0 text-preset-7 flex h-[39px] w-full items-center px-2 py-2 hover:rounded-md hover:bg-gray-700"}>
+                <button className={"text-neutral-0 text-preset-7 flex h-[39px] w-full items-center px-2 py-2 hover:rounded-md hover:bg-gray-700"} onClick={() => setWindUnit("km/h")}>
                   <span>km/h</span>
                   {windUnit === "km/h" ? <img alt={"Checkmark Icon"} className={"ml-auto size-4"} src={checkmark} /> : null}
                 </button>
               </MenuItem>
               <MenuItem>
-                <button onClick={() => setWindUnit("mph")} className={"text-neutral-0 text-preset-7 flex h-[39px] w-full items-center px-2 py-2 hover:rounded-md hover:bg-gray-700"}>
+                <button className={"text-neutral-0 text-preset-7 flex h-[39px] w-full items-center px-2 py-2 hover:rounded-md hover:bg-gray-700"} onClick={() => setWindUnit("mph")}>
                   <span>mph</span>
                   {windUnit === "mph" ? <img alt={"Checkmark Icon"} className={"ml-auto size-4"} src={checkmark} /> : null}
                 </button>
@@ -93,13 +94,13 @@ function App() {
               <hr className={"mx-2 my-1 h-[1px] border-neutral-600"} />
               <p className={"text-preset-8 my-2 px-2 text-neutral-300"}>Precipitation</p>
               <MenuItem>
-                <button onClick={() => setPrecipUnit("mm")} className={"text-neutral-0 text-preset-7 flex h-[39px] w-full items-center px-2 py-2 hover:rounded-md hover:bg-gray-700"}>
+                <button className={"text-neutral-0 text-preset-7 flex h-[39px] w-full items-center px-2 py-2 hover:rounded-md hover:bg-gray-700"} onClick={() => setPrecipUnit("mm")}>
                   <span>Millimeters (mm)</span>
                   {precipUnit === "mm" ? <img alt={"Checkmark Icon"} className={"ml-auto size-4"} src={checkmark} /> : null}
                 </button>
               </MenuItem>
               <MenuItem>
-                <button onClick={() => setPrecipUnit("inches")} className={"text-neutral-0 text-preset-7 flex h-[39px] w-full items-center px-2 py-2 hover:rounded-md hover:bg-gray-700"}>
+                <button className={"text-neutral-0 text-preset-7 flex h-[39px] w-full items-center px-2 py-2 hover:rounded-md hover:bg-gray-700"} onClick={() => setPrecipUnit("inches")}>
                   <span>Inches (in)</span>
                   {precipUnit === "inches" ? <img alt={"Checkmark Icon"} className={"ml-auto size-4"} src={checkmark} /> : null}
                 </button>
@@ -124,7 +125,7 @@ function App() {
           <section>
             <div>
               <div className={"relative"}>
-                <img alt={"Background Today"} src={"/bg-today-large.svg"} className={"min-w-full"} />
+                <img alt={"Background Today"} className={"min-w-full"} src={"/bg-today-large.svg"} />
                 <div className={"absolute top-1/3 ml-6 flex w-full items-center"}>
                   <div className={""}>
                     <p className={"text-preset-4 text-white"}>Berlin, Germany</p>
@@ -161,7 +162,7 @@ function App() {
 
             <div className={"flex gap-x-4 pt-5"}>
               {data.daily.time.map((time, index) => (
-                <div key={time} className={"w-full space-y-4 rounded-xl bg-[#262540] py-4"}>
+                <div className={"w-full space-y-4 rounded-xl bg-[#262540] py-4"} key={time}>
                   <h3 className={"text-preset-6 text-center text-neutral-200"}>{new Date(time).toLocaleDateString("en-US", { weekday: "short" })}</h3>
                   <img alt={"Drizzle Icon"} className={"mx-auto size-[60px]"} src={drizzle} />
                   <div className={"text-preset-7 flex justify-between px-2.5 text-neutral-200"}>
@@ -178,7 +179,7 @@ function App() {
               <h2 className={"text-preset-5 text-neutral-200"}>Hourly Forecast</h2>
 
               <div className="z-10 w-40">
-                <Listbox value={selectedDay} onChange={selectedDayHandler}>
+                <Listbox onChange={selectedDayHandler} value={selectedDay}>
                   <ListboxButton
                     className={clsx("relative block w-full rounded-lg bg-white/5 py-1.5 pr-8 pl-3 text-left text-sm/6 text-white", "focus:not-data-focus:outline-none data-focus:outline-2 data-focus:-outline-offset-2 data-focus:outline-white/25")}
                   >
@@ -186,11 +187,11 @@ function App() {
                   </ListboxButton>
                   <ListboxOptions
                     anchor="bottom"
-                    transition
                     className={clsx("w-(--button-width) rounded-xl border border-white/5 bg-white/5 p-1 [--anchor-gap:--spacing(1)] focus:outline-none", "transition duration-100 ease-in data-leave:data-closed:opacity-0")}
+                    transition
                   >
                     {data.daily.time.map((time, index) => (
-                      <ListboxOption key={time} value={time} className="group flex cursor-default items-center gap-2 rounded-lg px-3 py-1.5 select-none data-focus:bg-white/10">
+                      <ListboxOption className="group flex cursor-default items-center gap-2 rounded-lg px-3 py-1.5 select-none data-focus:bg-white/10" key={time} value={time}>
                         <div className="text-sm/6 text-white">{new Date(time).toLocaleDateString("en-US", { weekday: "long" })}</div>
                       </ListboxOption>
                     ))}
@@ -206,7 +207,7 @@ function App() {
                   const timeHour = new Date(time).getHours();
                   if (timeHour >= currentHour && timeHour < currentHour + 8) {
                     return (
-                      <div key={time} className={"flex h-[60px] items-center rounded-lg bg-[#3C3B5E] pr-4 pl-3"}>
+                      <div className={"flex h-[60px] items-center rounded-lg bg-[#3C3B5E] pr-4 pl-3"} key={time}>
                         <img alt={"Sunny Icon"} className={"size-10"} src={sunny} />
                         <p className={"text-preset-5 text-neutral-0"}>{new Date(time).toLocaleTimeString("en-US", { hour: "numeric", hour12: true })}</p>
                         <p className={"text-preset-7 text-neutral-0 ml-auto"}>{isImperial ? Math.round(((data.hourly.temperature_2m[index] - 32) * 5) / 9).toPrecision(2) : data.hourly.temperature_2m[index].toPrecision(2)}°</p>
