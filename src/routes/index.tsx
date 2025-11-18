@@ -11,6 +11,12 @@ import dropdown from "/icon-dropdown.svg";
 import search from "/icon-search.svg";
 import sunny from "/icon-sunny.webp";
 import units from "/icon-units.svg";
+import storm from "/icon-storm.webp";
+import snow from "/icon-snow.webp";
+import rain from "/icon-rain.webp";
+import partlyCloudy from "/icon-partly-cloudy.webp";
+import overcast from "/icon-overcast.webp";
+import fog from "/icon-fog.webp";
 import logo from "/logo.svg";
 
 export const Route = createFileRoute("/")({
@@ -42,6 +48,69 @@ function App() {
       setPrecipUnit("inches");
       setIsImperial(!isImperial);
       return;
+    }
+  }
+
+  function getWeatherIcon(code: number) {
+    switch (code) {
+      case 0:
+        return sunny;
+      case 1:
+        return sunny;
+      case 2:
+        return partlyCloudy;
+      case 3:
+        return overcast;
+      case 45:
+        return fog;
+      case 48:
+        return fog;
+      case 51:
+        return drizzle;
+      case 53:
+        return drizzle;
+      case 55:
+        return drizzle;
+      case 56:
+        return rain;
+      case 57:
+        return rain;
+      case 61:
+        return rain;
+      case 63:
+        return rain;
+      case 65:
+        return rain;
+      case 66:
+        return rain;
+      case 67:
+        return rain;
+      case 80:
+        return rain;
+      case 81:
+        return rain;
+      case 82:
+        return rain;
+      case 71:
+        return snow;
+      case 73:
+        return snow;
+      case 75:
+        return snow;
+      case 77:
+        return snow;
+      case 85:
+        return snow;
+      case 86:
+        return snow;
+      case 95:
+        return storm;
+      case 96:
+        return storm;
+      case 99:
+        return storm;
+      default:
+        return sunny;
     }
   }
 
@@ -164,7 +233,7 @@ function App() {
               {data.daily.time.map((time, index) => (
                 <div className={"w-full space-y-4 rounded-xl bg-[#262540] py-4"} key={time}>
                   <h3 className={"text-preset-6 text-center text-neutral-200"}>{new Date(time).toLocaleDateString("en-US", { weekday: "short" })}</h3>
-                  <img alt={"Drizzle Icon"} className={"mx-auto size-[60px]"} src={drizzle} />
+                  <img alt={"Weather Icon"} className={"mx-auto size-[60px]"} src={getWeatherIcon(data.daily.weather_code[index])} />
                   <div className={"text-preset-7 flex justify-between px-2.5 text-neutral-200"}>
                     <p>{isImperial ? Math.round(((data.daily.temperature_2m_max[index] - 32) * 5) / 9).toPrecision(2) : data.daily.temperature_2m_max[index].toPrecision(2)}°</p>
                     <p>{isImperial ? Math.round(((data.daily.temperature_2m_min[index] - 32) * 5) / 9).toPrecision(2) : data.daily.temperature_2m_min[index].toPrecision(2)}°</p>
@@ -208,8 +277,8 @@ function App() {
                   if (timeHour >= currentHour && timeHour < currentHour + 8) {
                     return (
                       <div className={"flex h-[60px] items-center rounded-lg bg-[#3C3B5E] pr-4 pl-3"} key={time}>
-                        <img alt={"Sunny Icon"} className={"size-10"} src={sunny} />
-                        <p className={"text-preset-5 text-neutral-0"}>{new Date(time).toLocaleTimeString("en-US", { hour: "numeric", hour12: true })}</p>
+                        <img alt={"Weather Icon"} className={"size-10"} src={getWeatherIcon(data.hourly.weather_code[index])} />
+                        <p className={"text-preset-5 text-neutral-0 pl-2"}>{new Date(time).toLocaleTimeString("en-US", { hour: "numeric", hour12: true })}</p>
                         <p className={"text-preset-7 text-neutral-0 ml-auto"}>{isImperial ? Math.round(((data.hourly.temperature_2m[index] - 32) * 5) / 9).toPrecision(2) : data.hourly.temperature_2m[index].toPrecision(2)}°</p>
                       </div>
                     );
