@@ -27,7 +27,7 @@ function App() {
   const [selectedDay, setselectedDay] = useState(new Date(data.daily.time[0]).toLocaleDateString("en-US", { weekday: "long" }));
   const [tempUnit, setTempUnit] = useState("Celsius");
   const [windUnit, setWindUnit] = useState("km/h");
-  const [precipUnit, setPrecipUnit] = useState("mm");
+  const [precipUnit, setprecipUnit] = useState("mm");
   const [isImperial, setIsImperial] = useState(false);
 
   const selectedDayHandler = (day: string) => {
@@ -39,13 +39,13 @@ function App() {
     if (isImperial) {
       setTempUnit("Celsius");
       setWindUnit("km/h");
-      setPrecipUnit("mm");
+      setprecipUnit("mm");
       setIsImperial(!isImperial);
       return;
     } else {
       setTempUnit("Fahrenheit");
       setWindUnit("mph");
-      setPrecipUnit("inches");
+      setprecipUnit("inches");
       setIsImperial(!isImperial);
       return;
     }
@@ -163,13 +163,13 @@ function App() {
               <hr className={"mx-2 my-1 h-[1px] border-neutral-600"} />
               <p className={"text-preset-8 my-2 px-2 text-neutral-300"}>Precipitation</p>
               <MenuItem>
-                <button className={"text-neutral-0 text-preset-7 flex h-[39px] w-full items-center px-2 py-2 hover:rounded-md hover:bg-gray-700"} onClick={() => setPrecipUnit("mm")}>
+                <button className={"text-neutral-0 text-preset-7 flex h-[39px] w-full items-center px-2 py-2 hover:rounded-md hover:bg-gray-700"} onClick={() => setprecipUnit("mm")}>
                   <span>Millimeters (mm)</span>
                   {precipUnit === "mm" ? <img alt={"Checkmark Icon"} className={"ml-auto size-4"} src={checkmark} /> : null}
                 </button>
               </MenuItem>
               <MenuItem>
-                <button className={"text-neutral-0 text-preset-7 flex h-[39px] w-full items-center px-2 py-2 hover:rounded-md hover:bg-gray-700"} onClick={() => setPrecipUnit("inches")}>
+                <button className={"text-neutral-0 text-preset-7 flex h-[39px] w-full items-center px-2 py-2 hover:rounded-md hover:bg-gray-700"} onClick={() => setprecipUnit("inches")}>
                   <span>Inches (in)</span>
                   {precipUnit === "inches" ? <img alt={"Checkmark Icon"} className={"ml-auto size-4"} src={checkmark} /> : null}
                 </button>
@@ -198,10 +198,10 @@ function App() {
                 <div className={"absolute top-1/3 ml-6 flex w-full items-center"}>
                   <div className={""}>
                     <p className={"text-preset-4 text-white"}>Berlin, Germany</p>
-                    <p className={"text-preset-6 pt-3 text-white opacity-80"}>Tuesday, Aug 5, 2025</p>
+                    <p className={"text-preset-6 pt-3 text-white opacity-80"}>{new Date(data.current.time).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}</p>
                   </div>
                   <div className={"mr-16 ml-auto flex items-center"}>
-                    <img alt={"Sunny Icon"} className={"size-[120px]"} src={sunny} />
+                    <img alt={"Weather Icon"} className={"size-[120px]"} src={getWeatherIcon(data.current.weather_code)} />
                     <span className={"text-preset-1 text-white"}>{data.current.temperature_2m}°</span>
                   </div>
                 </div>
@@ -260,7 +260,7 @@ function App() {
                     transition
                   >
                     {data.daily.time.map((time, index) => (
-                      <ListboxOption className="group flex cursor-default items-center gap-2 rounded-lg px-3 py-1.5 select-none data-focus:bg-white/10" key={time} value={time}>
+                      <ListboxOption className="group flex cursor-default items-center gap-2 rounded-lg px-3 py-1.5 select-none data-focus:bg-white/10" key={index} value={time}>
                         <div className="text-sm/6 text-white">{new Date(time).toLocaleDateString("en-US", { weekday: "long" })}</div>
                       </ListboxOption>
                     ))}
