@@ -38,9 +38,10 @@ function App() {
   const [showCityDropdown, setShowCityDropdown] = useState(false);
 
   const { data: cityResults, error: searchError } = useCitySearch(searchInput);
-  const { data: weatherData, error: weatherError, isLoading: isLoadingWeather } = useWeatherForecast(
+  const { data: weatherData, error: weatherError, isLoading: isLoadingWeather, refetch } = useWeatherForecast(
     selectedLocation?.latitude ?? null,
-    selectedLocation?.longitude ?? null
+    selectedLocation?.longitude ?? null,
+    isImperial ? 'fahrenheit' : 'celsius'
   );
 
   const displayWeather = weatherData ?? data;
@@ -56,18 +57,19 @@ function App() {
       setTempUnit("Celsius");
       setWindUnit("km/h");
       setprecipUnit("mm");
-      setIsImperial(!isImperial);
-      return;
+      setIsImperial(false);
     } else {
       setTempUnit("Fahrenheit");
       setWindUnit("mph");
       setprecipUnit("inches");
-      setIsImperial(!isImperial);
-      return;
+      setIsImperial(true);
+    }
+    if (selectedLocation) {
+      refetch();
     }
   }
 
-  const displayTemp = (celsius: number) => isImperial ? Math.round(celsius * 9/5 + 32) : celsius;
+  const displayTemp = (temp: number) => isImperial ? Math.round(temp * 9/5 + 32) : temp;
 
   function getWeatherIcon(code: number) {
     switch (code) {
