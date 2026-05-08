@@ -3,6 +3,9 @@ import { createFileRoute } from "@tanstack/react-router";
 import clsx from "clsx";
 import { useState } from "react";
 
+import { useCitySearch } from "../hooks/useCitySearch";
+import { useWeatherForecast } from "../hooks/useWeatherForecast";
+import type { Location } from "../hooks/useCitySearch";
 import { weatherData as data } from "../data/mydata";
 
 import checkmark from "/icon-checkmark.svg";
@@ -29,6 +32,17 @@ function App() {
   const [windUnit, setWindUnit] = useState("km/h");
   const [precipUnit, setprecipUnit] = useState("mm");
   const [isImperial, setIsImperial] = useState(false);
+  const [searchInput, setSearchInput] = useState("");
+  const [selectedLocation, setSelectedLocation] = useState<Location | null>(null);
+
+  const { data: cityResults, isLoading: _isSearchingCities, error: searchError } = useCitySearch(searchInput);
+  const { data: weatherData, isLoading: isLoadingWeather, error: weatherError } = useWeatherForecast(
+    selectedLocation?.latitude ?? null,
+    selectedLocation?.longitude ?? null
+  );
+
+  const displayWeather = weatherData ?? data;
+  const displayLocation = selectedLocation?.name ?? "Berlin, Germany";
 
   const selectedDayHandler = (day: string) => {
     const weekday = new Date(day).toLocaleDateString("en-US", { weekday: "long" });
@@ -184,10 +198,46 @@ function App() {
           <div className={"mx-auto mt-16 flex h-14 w-full justify-center gap-x-4"}>
             <div className={"flex items-center gap-3 rounded-xl bg-[#262540] px-4 lg:w-[526px]"}>
               <img alt={"Search Icon"} className={"size-5"} src={search} />
-              <Input className={"text-preset-5 placeholder:text-preset-5 h-6 text-neutral-200 placeholder-neutral-200 outline-none"} name={"Search"} placeholder={"Search for a place..."} type={"text"} />
+              <Input
+                className={"text-preset-5 placeholder:text-preset-5 h-6 text-neutral-200 placeholder-neutral-200 outline-none"}
+                name={"Search"}
+                placeholder={"Search for a place..."}
+                type={"text"}
+                value={searchInput}
+                onChange={(e) => setSearchInput(e.target.value)}
+              />
             </div>
-            <Button className={"text-preset-5 rounded-xl bg-[#4658D9] px-4 text-neutral-200"}>Search</Button>
+            <Button
+              className={"text-preset-5 rounded-xl bg-[#4658D9] px-4 text-neutral-200 disabled:opacity-50"}
+              disabled={!selectedLocation || isLoadingWeather}
+              onClick={() => {}}
+            >
+              {isLoadingWeather ? "Loading..." : "Search"}
+            </Button>
           </div>
+          {searchError && (
+            <p className={"text-preset-7 mt-2 text-red-400"}>Couldn't find cities. Try a different name.</p>
+          )}
+          {cityResults && cityResults.length > 0 && (
+            <div className={"mx-auto mt-2 w-full max-w-[526px] rounded-xl bg-neutral-800"}>
+              {cityResults.map((city) => (
+                <button
+                  key={city.id}
+                  className={"flex w-full items-center px-4 py-2 text-left hover:bg-neutral-700"}
+                  onClick={() => {
+                    setSelectedLocation(city);
+                    setSearchInput(city.name);
+                  }}
+                >
+                  <span className={"text-preset-5 text-neutral-200"}>{city.name}</span>
+                  <span className={"text-preset-7 ml-2 text-neutral-400"}>{city.admin1}, {city.country}</span>
+                </button>
+              ))}
+            </div>
+          )}
+          {weatherError && (
+            <p className={"text-preset-7 mt-2 text-red-400"}>Couldn't load weather data. Please try again.</p>
+          )}
         </div>
 
         <div className={"flex gap-x-8 pt-12"}>
@@ -197,12 +247,12 @@ function App() {
                 <img alt={"Background Today"} className={"min-w-full"} src={"/bg-today-large.svg"} />
                 <div className={"absolute top-1/3 ml-6 flex w-full items-center"}>
                   <div className={""}>
-                    <p className={"text-preset-4 text-white"}>Berlin, Germany</p>
-                    <p className={"text-preset-6 pt-3 text-white opacity-80"}>{new Date(data.current.time).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}</p>
+                    <p className={"text-preset-4 text-white"}>{displayLocation}</p>
+                    <p className={"text-preset-6 pt-3 text-white opacity-80"}>{new Date(displayWeather.current.time).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}</p>
                   </div>
                   <div className={"mr-16 ml-auto flex items-center"}>
-                    <img alt={"Weather Icon"} className={"size-[120px]"} src={getWeatherIcon(data.current.weather_code)} />
-                    <span className={"text-preset-1 text-white"}>{data.current.temperature_2m}°</span>
+                    <img alt={"Weather Icon"} className={"size-[120px]"} src={getWeatherIcon(displayWeather.current.weather_code)} />
+                    <span className={"text-preset-1 text-white"}>{displayWeather.current.temperature_2m}°</span>
                   </div>
                 </div>
               </div>
@@ -210,19 +260,19 @@ function App() {
               <div className={"mt-8 flex w-full gap-x-6"}>
                 <div className={"w-full space-y-6 rounded-xl bg-[#262540] p-5"}>
                   <h3 className={"text-preset-6 text-neutral-200"}>Feels Like</h3>
-                  <span className={"text-preset-3 text-neutral-200"}>{data.current.temperature_2m}°</span>
+                  <span className={"text-preset-3 text-neutral-200"}>{displayWeather.current.temperature_2m}°</span>
                 </div>
                 <div className={"w-full space-y-6 rounded-xl bg-[#262540] p-5"}>
                   <h3 className={"text-preset-6 text-neutral-200"}>Humidity</h3>
-                  <span className={"text-preset-3 text-neutral-200"}>{data.current.relative_humidity_2m}%</span>
+                  <span className={"text-preset-3 text-neutral-200"}>{displayWeather.current.relative_humidity_2m}%</span>
                 </div>
                 <div className={"w-full space-y-6 rounded-xl bg-[#262540] p-5"}>
                   <h3 className={"text-preset-6 text-neutral-200"}>Wind</h3>
-                  <span className={"text-preset-3 text-neutral-200"}>{data.current.wind_speed_10m} km/h</span>
+                  <span className={"text-preset-3 text-neutral-200"}>{displayWeather.current.wind_speed_10m} km/h</span>
                 </div>
                 <div className={"w-full space-y-6 rounded-xl bg-[#262540] p-5"}>
                   <h3 className={"text-preset-6 text-neutral-200"}>Precipitation</h3>
-                  <span className={"text-preset-3 text-neutral-200"}>{data.current.precipitation} mm</span>
+                  <span className={"text-preset-3 text-neutral-200"}>{displayWeather.current.precipitation} mm</span>
                 </div>
               </div>
             </div>
@@ -230,13 +280,13 @@ function App() {
             <h2 className={"text-preset-4 pt-12 text-neutral-200"}>Daily Forecast</h2>
 
             <div className={"flex gap-x-4 pt-5"}>
-              {data.daily.time.map((time, index) => (
+              {displayWeather.daily.time.map((time, index) => (
                 <div className={"w-full space-y-4 rounded-xl bg-[#262540] py-4"} key={time}>
                   <h3 className={"text-preset-6 text-center text-neutral-200"}>{new Date(time).toLocaleDateString("en-US", { weekday: "short" })}</h3>
-                  <img alt={"Weather Icon"} className={"mx-auto size-[60px]"} src={getWeatherIcon(data.daily.weather_code[index])} />
+                  <img alt={"Weather Icon"} className={"mx-auto size-[60px]"} src={getWeatherIcon(displayWeather.daily.weather_code[index])} />
                   <div className={"text-preset-7 flex justify-between px-2.5 text-neutral-200"}>
-                    <p>{isImperial ? Math.round(((data.daily.temperature_2m_max[index] - 32) * 5) / 9).toPrecision(2) : data.daily.temperature_2m_max[index].toPrecision(2)}°</p>
-                    <p>{isImperial ? Math.round(((data.daily.temperature_2m_min[index] - 32) * 5) / 9).toPrecision(2) : data.daily.temperature_2m_min[index].toPrecision(2)}°</p>
+                    <p>{isImperial ? Math.round(((displayWeather.daily.temperature_2m_max[index] - 32) * 5) / 9).toPrecision(2) : displayWeather.daily.temperature_2m_max[index].toPrecision(2)}°</p>
+                    <p>{isImperial ? Math.round(((displayWeather.daily.temperature_2m_min[index] - 32) * 5) / 9).toPrecision(2) : displayWeather.daily.temperature_2m_min[index].toPrecision(2)}°</p>
                   </div>
                 </div>
               ))}
@@ -259,7 +309,7 @@ function App() {
                     className={clsx("w-(--button-width) rounded-xl border border-white/5 bg-white/5 p-1 [--anchor-gap:--spacing(1)] focus:outline-none", "transition duration-100 ease-in data-leave:data-closed:opacity-0")}
                     transition
                   >
-                    {data.daily.time.map((time, index) => (
+                    {displayWeather.daily.time.map((time, index) => (
                       <ListboxOption className="group flex cursor-default items-center gap-2 rounded-lg px-3 py-1.5 select-none data-focus:bg-white/10" key={index} value={time}>
                         <div className="text-sm/6 text-white">{new Date(time).toLocaleDateString("en-US", { weekday: "long" })}</div>
                       </ListboxOption>
@@ -269,7 +319,7 @@ function App() {
               </div>
             </div>
             <section className={"space-y-4 pt-4"}>
-              {data.hourly.time.map((time, index) => {
+              {displayWeather.hourly.time.map((time, index) => {
                 const day = new Date(time).toLocaleDateString("en-US", { weekday: "long" });
                 if (day === selectedDay) {
                   const currentHour = new Date().getHours();
@@ -277,9 +327,9 @@ function App() {
                   if (timeHour >= currentHour && timeHour < currentHour + 8) {
                     return (
                       <div className={"flex h-[60px] items-center rounded-lg bg-[#3C3B5E] pr-4 pl-3"} key={time}>
-                        <img alt={"Weather Icon"} className={"size-10"} src={getWeatherIcon(data.hourly.weather_code[index])} />
+                        <img alt={"Weather Icon"} className={"size-10"} src={getWeatherIcon(displayWeather.hourly.weather_code[index])} />
                         <p className={"text-preset-5 text-neutral-0 pl-2"}>{new Date(time).toLocaleTimeString("en-US", { hour: "numeric", hour12: true })}</p>
-                        <p className={"text-preset-7 text-neutral-0 ml-auto"}>{isImperial ? Math.round(((data.hourly.temperature_2m[index] - 32) * 5) / 9).toPrecision(2) : data.hourly.temperature_2m[index].toPrecision(2)}°</p>
+                        <p className={"text-preset-7 text-neutral-0 ml-auto"}>{isImperial ? Math.round(((displayWeather.hourly.temperature_2m[index] - 32) * 5) / 9).toPrecision(2) : displayWeather.hourly.temperature_2m[index].toPrecision(2)}°</p>
                       </div>
                     );
                   }
