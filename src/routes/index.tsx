@@ -221,7 +221,7 @@ function App() {
               />
             </div>
             <Button
-              className={"text-preset-5 rounded-xl bg-[#4658D9] px-4 text-neutral-200 disabled:opacity-50"}
+              className={"text-preset-5 rounded-xl bg-[#4658d9] px-4 text-neutral-200"}
               disabled={!selectedLocation || isLoadingWeather}
               onClick={() => {}}
             >
@@ -257,36 +257,38 @@ function App() {
         <div className={"flex lg:justify-center flex-col lg:flex-row gap-x-8 pt-12"}>
           <section>
             <div>
-              <div className={"relative"}>
-                <img alt={"Background Today"} className={"min-w-full"} src={"/bg-today-large.svg"} />
-                <div className={"absolute top-1/3 ml-6 flex w-full items-center"}>
+              <div className={"p-6 rounded-4xl py-[41px] md:py-0 bg-no-repeat bg-[url(/bg-today-large.svg)] h-[286px]"}
+
+              >
+                {/*<img alt={"Background Today"} className={"min-w-full"} src={"/bg-today-large.svg"} />*/}
+                <div className={" flex flex-col md:flex-row w-full items-center h-full"}>
                   <div className={""}>
                     <p className={"text-preset-4 text-white"}>{displayLocation}</p>
                     <p className={"text-preset-6 pt-3 text-white opacity-80"}>{new Date(displayWeather.current.time).toLocaleDateString("en-US", { day: "numeric", month: "long", year: "numeric" })}</p>
                   </div>
-                  <div className={"mr-16 ml-auto flex items-center"}>
+                  <div className={"md:ml-auto flex items-center pr-3"}>
                     <img alt={"Weather Icon"} className={"size-[120px]"} src={getWeatherIcon(displayWeather.current.weather_code)} />
                     <span className={"text-preset-1 text-white"}>{displayTemp(displayWeather.current.temperature_2m)}°</span>
                   </div>
                 </div>
               </div>
               <div></div>
-              <div className={"mt-8 flex w-full gap-x-6"}>
-                <div className={"w-full space-y-6 rounded-xl bg-[#262540] p-5"}>
+              <div className={"mt-8 flex w-full gap-x-6 flex-wrap md:flex-nowrap gap-y-4"}>
+                <div className={"w-full space-y-6 rounded-xl bg-[#262540] p-5 max-w-[163.5px] max-h-[118px] md:max-w-none md:max-h-none"}>
                   <h3 className={"text-preset-6 text-neutral-200"}>Feels Like</h3>
-                  <span className={"text-preset-3 text-neutral-200"}>{displayTemp(displayWeather.current.temperature_2m)}°</span>
+                  <span className={"text-preset-3 text-neutral-200 text-nowrap"}>{displayTemp(displayWeather.current.temperature_2m)}°</span>
                 </div>
-                <div className={"w-full space-y-6 rounded-xl bg-[#262540] p-5"}>
+                <div className={"w-full space-y-6 rounded-xl bg-[#262540] p-5 max-w-[163.5px] max-h-[118px] md:max-w-none md:max-h-none"}>
                   <h3 className={"text-preset-6 text-neutral-200"}>Humidity</h3>
-                  <span className={"text-preset-3 text-neutral-200"}>{displayWeather.current.relative_humidity_2m}%</span>
+                  <span className={"text-preset-3 text-neutral-200 text-nowrap"}>{displayWeather.current.relative_humidity_2m}%</span>
                 </div>
-                <div className={"w-full space-y-6 rounded-xl bg-[#262540] p-5"}>
+                <div className={"w-full space-y-6 rounded-xl bg-[#262540] p-5 max-w-[163.5px] max-h-[118px] md:max-w-none md:max-h-none"}>
                   <h3 className={"text-preset-6 text-neutral-200"}>Wind</h3>
-                  <span className={"text-preset-3 text-neutral-200"}>{displayWeather.current.wind_speed_10m} {isImperial ? 'mph' : 'km/h'}</span>
+                  <span className={"text-preset-3 text-neutral-200 text-nowrap"}>{displayWeather.current.wind_speed_10m} {isImperial ? 'mph' : 'km/h'}</span>
                 </div>
-                <div className={"w-full space-y-6 rounded-xl bg-[#262540] p-5"}>
+                <div className={"w-full space-y-6 rounded-xl bg-[#262540] p-5 max-w-[163.5px] max-h-[118px] md:max-w-none md:max-h-none"}>
                   <h3 className={"text-preset-6 text-neutral-200"}>Precipitation</h3>
-                  <span className={"text-preset-3 text-neutral-200"}>{displayWeather.current.precipitation} mm</span>
+                  <span className={"text-preset-3 text-neutral-200 text-nowrap"}>{displayWeather.current.precipitation} mm</span>
                 </div>
               </div>
             </div>
@@ -295,7 +297,7 @@ function App() {
 
             <div className={"flex flex-wrap gap-4 pt-5"}>
               {displayWeather.daily.time.map((time, index) => (
-                <div className={"min-w-[120px] flex-1 space-y-4 rounded-xl bg-[#262540] py-4"} key={time}>
+                <div className={"max-w-[103px] md:max-w-[89px] lg:max-w-[100.5px] flex-1 space-y-4 rounded-xl bg-[#262540] py-4"} key={time}>
                   <h3 className={"text-preset-6 text-center text-neutral-200"}>{new Date(time).toLocaleDateString("en-US", { weekday: "short" })}</h3>
                   <img alt={"Weather Icon"} className={"mx-auto size-[60px]"} src={getWeatherIcon(displayWeather.daily.weather_code[index])} />
                   <div className={"text-preset-7 flex justify-between px-2.5 text-neutral-200"}>
