@@ -1,6 +1,7 @@
-import { renderHook, waitFor } from '@testing-library/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { useCitySearch, searchCities } from '../useCitySearch'
+import { renderHook, waitFor } from '@testing-library/react'
+
+import { searchCities, useCitySearch } from '../useCitySearch'
 
 const createWrapper = () => {
   const queryClient = new QueryClient()
@@ -27,8 +28,8 @@ describe('useCitySearch', () => {
 
   it('fetches cities when query >= 2 chars', async () => {
     globalThis.fetch = vi.fn().mockResolvedValue({
+      json: () => Promise.resolve({ results: [{ country: 'US', id: 1, latitude: 37.2, longitude: -93.3, name: 'Springfield', timezone: 'America/Chicago' }] }),
       ok: true,
-      json: () => Promise.resolve({ results: [{ id: 1, name: 'Springfield', latitude: 37.2, longitude: -93.3, country: 'US', timezone: 'America/Chicago' }] }),
     })
 
     const { result } = renderHook(() => useCitySearch('Spring'), { wrapper: createWrapper() })
@@ -39,8 +40,8 @@ describe('useCitySearch', () => {
   it('throws error when API response is not ok', async () => {
     ;(globalThis.fetch as ReturnType<typeof vi.fn>).mockImplementation(() =>
       Promise.resolve({
-        ok: false,
         json: () => Promise.resolve({}),
+        ok: false,
       })
     )
 

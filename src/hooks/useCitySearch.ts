@@ -1,12 +1,12 @@
 import { useQuery } from '@tanstack/react-query'
 
 export interface Location {
+  admin1?: string
+  country: string
   id: number
-  name: string
   latitude: number
   longitude: number
-  country: string
-  admin1?: string
+  name: string
   timezone: string
 }
 
@@ -30,9 +30,9 @@ export async function searchCities(query: string): Promise<Location[]> {
 
 export function useCitySearch(query: string) {
   return useQuery({
-    queryKey: ['city-search', query],
-    queryFn: () => searchCities(query),
     enabled: query.length >= 2,
+    queryFn: () => searchCities(query),
+    queryKey: ['city-search', query],
     staleTime: 1000 * 60 * 5,
   })
 }

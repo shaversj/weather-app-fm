@@ -1,6 +1,7 @@
-import { renderHook, waitFor } from '@testing-library/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { useWeatherForecast, fetchWeather } from '../useWeatherForecast'
+import { renderHook, waitFor } from '@testing-library/react'
+
+import { fetchWeather, useWeatherForecast } from '../useWeatherForecast'
 
 const createWrapper = () => {
   const queryClient = new QueryClient()
@@ -38,14 +39,14 @@ describe('useWeatherForecast', () => {
 
   it('fetches weather when lat/lon provided', async () => {
     globalThis.fetch = vi.fn().mockResolvedValue({
-      ok: true,
       json: () => Promise.resolve({
+        current: { precipitation: 0, relative_humidity_2m: 92, temperature_2m: 65.9, time: '2025-11-18T15:00', weather_code: 3, wind_speed_10m: 19.5 },
+        daily: { precipitation_probability_max: [25], temperature_2m_max: [72.9], temperature_2m_min: [56.6], time: ['2025-11-18'], weather_code: [3] },
+        hourly: { temperature_2m: [65.9], time: ['2025-11-18T15:00'], weather_code: [3] },
         latitude: 37.2,
         longitude: -93.3,
-        current: { time: '2025-11-18T15:00', temperature_2m: 65.9, relative_humidity_2m: 92, weather_code: 3, wind_speed_10m: 19.5, precipitation: 0 },
-        hourly: { time: ['2025-11-18T15:00'], temperature_2m: [65.9], weather_code: [3] },
-        daily: { time: ['2025-11-18'], temperature_2m_max: [72.9], temperature_2m_min: [56.6], weather_code: [3], precipitation_probability_max: [25] },
       }),
+      ok: true,
     })
 
     const { result } = renderHook(() => useWeatherForecast(37.2, -93.3), { wrapper: createWrapper() })

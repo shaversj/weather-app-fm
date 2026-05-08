@@ -1,36 +1,36 @@
 import { useQuery } from '@tanstack/react-query'
 
 export interface WeatherResponse {
-  latitude: number
-  longitude: number
   current: {
-    time: string
-    temperature_2m: number
+    precipitation: number
     relative_humidity_2m: number
+    temperature_2m: number
+    time: string
     weather_code: number
     wind_speed_10m: number
-    precipitation: number
-  }
-  hourly: {
-    time: string[]
-    temperature_2m: number[]
-    weather_code: number[]
   }
   daily: {
-    time: string[]
+    precipitation_probability_max: number[]
     temperature_2m_max: number[]
     temperature_2m_min: number[]
+    time: string[]
     weather_code: number[]
-    precipitation_probability_max: number[]
   }
+  hourly: {
+    temperature_2m: number[]
+    time: string[]
+    weather_code: number[]
+  }
+  latitude: number
+  longitude: number
 }
 
 interface OpenMeteoResponse {
+  current: WeatherResponse['current']
+  daily: WeatherResponse['daily']
+  hourly: WeatherResponse['hourly']
   latitude: number
   longitude: number
-  current: WeatherResponse['current']
-  hourly: WeatherResponse['hourly']
-  daily: WeatherResponse['daily']
 }
 
 export async function fetchWeather(lat: number, lon: number): Promise<WeatherResponse> {
@@ -50,11 +50,11 @@ export async function fetchWeather(lat: number, lon: number): Promise<WeatherRes
   return data as WeatherResponse
 }
 
-export function useWeatherForecast(latitude: number | null, longitude: number | null) {
+export function useWeatherForecast(latitude: null | number, longitude: null | number) {
   return useQuery({
-    queryKey: ['weather', latitude, longitude],
-    queryFn: () => fetchWeather(latitude!, longitude!),
     enabled: latitude !== null && longitude !== null,
+    queryFn: () => fetchWeather(latitude!, longitude!),
+    queryKey: ['weather', latitude, longitude],
     staleTime: 1000 * 60 * 10,
   })
 }

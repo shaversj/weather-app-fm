@@ -3,23 +3,24 @@ import { createFileRoute } from "@tanstack/react-router";
 import clsx from "clsx";
 import { useState } from "react";
 
+import type { Location } from "../hooks/useCitySearch";
+
+import { weatherData as data } from "../data/mydata";
 import { useCitySearch } from "../hooks/useCitySearch";
 import { useWeatherForecast } from "../hooks/useWeatherForecast";
-import type { Location } from "../hooks/useCitySearch";
-import { weatherData as data } from "../data/mydata";
 
 import checkmark from "/icon-checkmark.svg";
 import drizzle from "/icon-drizzle.webp";
 import dropdown from "/icon-dropdown.svg";
+import fog from "/icon-fog.webp";
+import overcast from "/icon-overcast.webp";
+import partlyCloudy from "/icon-partly-cloudy.webp";
+import rain from "/icon-rain.webp";
 import search from "/icon-search.svg";
+import snow from "/icon-snow.webp";
+import storm from "/icon-storm.webp";
 import sunny from "/icon-sunny.webp";
 import units from "/icon-units.svg";
-import storm from "/icon-storm.webp";
-import snow from "/icon-snow.webp";
-import rain from "/icon-rain.webp";
-import partlyCloudy from "/icon-partly-cloudy.webp";
-import overcast from "/icon-overcast.webp";
-import fog from "/icon-fog.webp";
 import logo from "/logo.svg";
 
 export const Route = createFileRoute("/")({
@@ -35,8 +36,8 @@ function App() {
   const [searchInput, setSearchInput] = useState("");
   const [selectedLocation, setSelectedLocation] = useState<Location | null>(null);
 
-  const { data: cityResults, isLoading: _isSearchingCities, error: searchError } = useCitySearch(searchInput);
-  const { data: weatherData, isLoading: isLoadingWeather, error: weatherError } = useWeatherForecast(
+  const { data: cityResults, error: searchError } = useCitySearch(searchInput);
+  const { data: weatherData, error: weatherError, isLoading: isLoadingWeather } = useWeatherForecast(
     selectedLocation?.latitude ?? null,
     selectedLocation?.longitude ?? null
   );
@@ -101,12 +102,6 @@ function App() {
         return rain;
       case 67:
         return rain;
-      case 80:
-        return rain;
-      case 81:
-        return rain;
-      case 82:
-        return rain;
       case 71:
         return snow;
       case 73:
@@ -115,6 +110,12 @@ function App() {
         return snow;
       case 77:
         return snow;
+      case 80:
+        return rain;
+      case 81:
+        return rain;
+      case 82:
+        return rain;
       case 85:
         return snow;
       case 86:
@@ -203,10 +204,10 @@ function App() {
               <Input
                 className={"text-preset-5 placeholder:text-preset-5 h-6 text-neutral-200 placeholder-neutral-200 outline-none"}
                 name={"Search"}
+                onChange={(e) => setSearchInput(e.target.value)}
                 placeholder={"Search for a place..."}
                 type={"text"}
                 value={searchInput}
-                onChange={(e) => setSearchInput(e.target.value)}
               />
             </div>
             <Button
@@ -224,8 +225,8 @@ function App() {
             <div className={"mx-auto mt-2 w-full max-w-[526px] rounded-xl bg-neutral-800"}>
               {cityResults.map((city) => (
                 <button
-                  key={city.id}
                   className={"flex w-full items-center px-4 py-2 text-left hover:bg-neutral-700"}
+                  key={city.id}
                   onClick={() => {
                     setSelectedLocation(city);
                     setSearchInput(city.name);
@@ -250,7 +251,7 @@ function App() {
                 <div className={"absolute top-1/3 ml-6 flex w-full items-center"}>
                   <div className={""}>
                     <p className={"text-preset-4 text-white"}>{displayLocation}</p>
-                    <p className={"text-preset-6 pt-3 text-white opacity-80"}>{new Date(displayWeather.current.time).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}</p>
+                    <p className={"text-preset-6 pt-3 text-white opacity-80"}>{new Date(displayWeather.current.time).toLocaleDateString("en-US", { day: "numeric", month: "long", year: "numeric" })}</p>
                   </div>
                   <div className={"mr-16 ml-auto flex items-center"}>
                     <img alt={"Weather Icon"} className={"size-[120px]"} src={getWeatherIcon(displayWeather.current.weather_code)} />
