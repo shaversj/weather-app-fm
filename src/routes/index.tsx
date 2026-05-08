@@ -73,7 +73,7 @@ function App() {
     }
   }
 
-  const displayTemp = (temp: number) => isImperial ? Math.round(temp * 9/5 + 32) : temp;
+  const displayTemp = (temp: number) => temp;
 
   function getWeatherIcon(code: number) {
     switch (code) {
