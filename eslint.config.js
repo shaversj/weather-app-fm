@@ -7,7 +7,7 @@ export default [
     ...pluginRouter.configs["flat/recommended"],
     perfectionist.configs["recommended-natural"],
     {
-        files: ["**/*.{ts,tsx}"],
+        files: ["src/**/*.ts", "src/**/*.tsx"],
         languageOptions: {
             parser: tsParser,
             parserOptions: {
