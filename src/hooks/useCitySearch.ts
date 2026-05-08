@@ -14,7 +14,7 @@ interface GeocodingResponse {
   results?: Location[]
 }
 
-async function searchCities(query: string): Promise<Location[]> {
+export async function searchCities(query: string): Promise<Location[]> {
   const url = new URL('https://geocoding-api.open-meteo.com/v1/search')
   url.searchParams.set('name', query)
   url.searchParams.set('count', '5')
