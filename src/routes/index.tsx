@@ -35,6 +35,7 @@ function App() {
   const [isImperial, setIsImperial] = useState(false);
   const [searchInput, setSearchInput] = useState("");
   const [selectedLocation, setSelectedLocation] = useState<Location | null>(null);
+  const [showCityDropdown, setShowCityDropdown] = useState(false);
 
   const { data: cityResults, error: searchError } = useCitySearch(searchInput);
   const { data: weatherData, error: weatherError, isLoading: isLoadingWeather } = useWeatherForecast(
@@ -204,7 +205,10 @@ function App() {
               <Input
                 className={"text-preset-5 placeholder:text-preset-5 h-6 text-neutral-200 placeholder-neutral-200 outline-none"}
                 name={"Search"}
-                onChange={(e) => setSearchInput(e.target.value)}
+                onChange={(e) => {
+                setSearchInput(e.target.value);
+                setShowCityDropdown(true);
+              }}
                 placeholder={"Search for a place..."}
                 type={"text"}
                 value={searchInput}
@@ -221,7 +225,7 @@ function App() {
           {searchError && (
             <p className={"text-preset-7 mt-2 text-red-400"}>Couldn't find cities. Try a different name.</p>
           )}
-          {cityResults && cityResults.length > 0 && (
+          {showCityDropdown && cityResults && cityResults.length > 0 && (
             <div className={"mx-auto mt-2 w-full max-w-[526px] rounded-xl bg-neutral-800"}>
               {cityResults.map((city) => (
                 <button
@@ -230,6 +234,7 @@ function App() {
                   onClick={() => {
                     setSelectedLocation(city);
                     setSearchInput(city.name);
+                    setShowCityDropdown(false);
                   }}
                 >
                   <span className={"text-preset-5 text-neutral-200"}>{city.name}</span>
