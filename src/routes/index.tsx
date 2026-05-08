@@ -53,17 +53,21 @@ function App() {
   };
 
   function toggleUnits() {
-    if (isImperial) {
-      setTempUnit("Celsius");
-      setWindUnit("km/h");
-      setprecipUnit("mm");
-      setIsImperial(false);
-    } else {
-      setTempUnit("Fahrenheit");
-      setWindUnit("mph");
-      setprecipUnit("inches");
-      setIsImperial(true);
+    setIsImperial(!isImperial);
+    setTempUnit(isImperial ? "Celsius" : "Fahrenheit");
+    setWindUnit(isImperial ? "km/h" : "mph");
+    setprecipUnit(isImperial ? "mm" : "inches");
+    if (selectedLocation) {
+      refetch();
     }
+  }
+
+  function setTemperatureUnit(unit: 'Celsius' | 'Fahrenheit') {
+    setTempUnit(unit);
+    const nowImperial = unit === 'Fahrenheit';
+    setIsImperial(nowImperial);
+    setWindUnit(nowImperial ? 'mph' : 'km/h');
+    setprecipUnit(nowImperial ? 'inches' : 'mm');
     if (selectedLocation) {
       refetch();
     }
@@ -154,13 +158,13 @@ function App() {
 
               <p className={"text-preset-8 my-2 px-2 text-neutral-300"}>Temperature</p>
               <MenuItem>
-                <button className={"text-neutral-0 text-preset-7 flex h-[39px] w-full items-center px-2 py-2 hover:rounded-md hover:bg-gray-700"} onClick={() => setTempUnit("Celsius")}>
+                <button className={"text-neutral-0 text-preset-7 flex h-[39px] w-full items-center px-2 py-2 hover:rounded-md hover:bg-gray-700"} onClick={() => { setIsImperial(false); setWindUnit("km/h"); setprecipUnit("mm"); setTemperatureUnit("Celsius"); }}>
                   <span>Celsius (°C)</span>
                   {tempUnit === "Celsius" ? <img alt={"Checkmark Icon"} className={"ml-auto size-4"} src={checkmark} /> : null}
                 </button>
               </MenuItem>
               <MenuItem>
-                <button className={"text-neutral-0 text-preset-7 flex h-[39px] w-full items-center px-2 py-2 hover:rounded-md hover:bg-gray-700"} onClick={() => setTempUnit("Fahrenheit")}>
+                <button className={"text-neutral-0 text-preset-7 flex h-[39px] w-full items-center px-2 py-2 hover:rounded-md hover:bg-gray-700"} onClick={() => { setIsImperial(true); setWindUnit("mph"); setprecipUnit("inches"); setTemperatureUnit("Fahrenheit"); }}>
                   <span>Fahrenheit (°F)</span>
                   {tempUnit === "Fahrenheit" ? <img alt={"Checkmark Icon"} className={"ml-auto size-4"} src={checkmark} /> : null}
                 </button>
