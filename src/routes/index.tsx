@@ -28,7 +28,7 @@ export const Route = createFileRoute("/")({
 });
 
 function App() {
-  const [selectedDay, setselectedDay] = useState(new Date(data.daily.time[0]).toLocaleDateString("en-US", { weekday: "long" }));
+  const [selectedDay, setselectedDay] = useState(new Date().toLocaleDateString("en-US", { weekday: "long" }));
   const [tempUnit, setTempUnit] = useState("Celsius");
   const [windUnit, setWindUnit] = useState("km/h");
   const [precipUnit, setprecipUnit] = useState("mm");
