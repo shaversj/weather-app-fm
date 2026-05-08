@@ -65,6 +65,8 @@ function App() {
     }
   }
 
+  const displayTemp = (celsius: number) => isImperial ? Math.round(celsius * 9/5 + 32) : celsius;
+
   function getWeatherIcon(code: number) {
     switch (code) {
       case 0:
@@ -252,7 +254,7 @@ function App() {
                   </div>
                   <div className={"mr-16 ml-auto flex items-center"}>
                     <img alt={"Weather Icon"} className={"size-[120px]"} src={getWeatherIcon(displayWeather.current.weather_code)} />
-                    <span className={"text-preset-1 text-white"}>{displayWeather.current.temperature_2m}°</span>
+                    <span className={"text-preset-1 text-white"}>{displayTemp(displayWeather.current.temperature_2m)}°</span>
                   </div>
                 </div>
               </div>
@@ -260,7 +262,7 @@ function App() {
               <div className={"mt-8 flex w-full gap-x-6"}>
                 <div className={"w-full space-y-6 rounded-xl bg-[#262540] p-5"}>
                   <h3 className={"text-preset-6 text-neutral-200"}>Feels Like</h3>
-                  <span className={"text-preset-3 text-neutral-200"}>{displayWeather.current.temperature_2m}°</span>
+                  <span className={"text-preset-3 text-neutral-200"}>{displayTemp(displayWeather.current.temperature_2m)}°</span>
                 </div>
                 <div className={"w-full space-y-6 rounded-xl bg-[#262540] p-5"}>
                   <h3 className={"text-preset-6 text-neutral-200"}>Humidity</h3>
@@ -268,7 +270,7 @@ function App() {
                 </div>
                 <div className={"w-full space-y-6 rounded-xl bg-[#262540] p-5"}>
                   <h3 className={"text-preset-6 text-neutral-200"}>Wind</h3>
-                  <span className={"text-preset-3 text-neutral-200"}>{displayWeather.current.wind_speed_10m} km/h</span>
+                  <span className={"text-preset-3 text-neutral-200"}>{displayWeather.current.wind_speed_10m} {isImperial ? 'mph' : 'km/h'}</span>
                 </div>
                 <div className={"w-full space-y-6 rounded-xl bg-[#262540] p-5"}>
                   <h3 className={"text-preset-6 text-neutral-200"}>Precipitation</h3>
@@ -285,8 +287,8 @@ function App() {
                   <h3 className={"text-preset-6 text-center text-neutral-200"}>{new Date(time).toLocaleDateString("en-US", { weekday: "short" })}</h3>
                   <img alt={"Weather Icon"} className={"mx-auto size-[60px]"} src={getWeatherIcon(displayWeather.daily.weather_code[index])} />
                   <div className={"text-preset-7 flex justify-between px-2.5 text-neutral-200"}>
-                    <p>{isImperial ? Math.round(((displayWeather.daily.temperature_2m_max[index] - 32) * 5) / 9).toPrecision(2) : displayWeather.daily.temperature_2m_max[index].toPrecision(2)}°</p>
-                    <p>{isImperial ? Math.round(((displayWeather.daily.temperature_2m_min[index] - 32) * 5) / 9).toPrecision(2) : displayWeather.daily.temperature_2m_min[index].toPrecision(2)}°</p>
+                    <p>{displayTemp(displayWeather.daily.temperature_2m_max[index])}°</p>
+                    <p>{displayTemp(displayWeather.daily.temperature_2m_min[index])}°</p>
                   </div>
                 </div>
               ))}
@@ -329,7 +331,7 @@ function App() {
                       <div className={"flex h-[60px] items-center rounded-lg bg-[#3C3B5E] pr-4 pl-3"} key={time}>
                         <img alt={"Weather Icon"} className={"size-10"} src={getWeatherIcon(displayWeather.hourly.weather_code[index])} />
                         <p className={"text-preset-5 text-neutral-0 pl-2"}>{new Date(time).toLocaleTimeString("en-US", { hour: "numeric", hour12: true })}</p>
-                        <p className={"text-preset-7 text-neutral-0 ml-auto"}>{isImperial ? Math.round(((displayWeather.hourly.temperature_2m[index] - 32) * 5) / 9).toPrecision(2) : displayWeather.hourly.temperature_2m[index].toPrecision(2)}°</p>
+                        <p className={"text-preset-7 text-neutral-0 ml-auto"}>{displayTemp(displayWeather.hourly.temperature_2m[index])}°</p>
                       </div>
                     );
                   }
