@@ -254,7 +254,7 @@ function App() {
           )}
         </div>
 
-        <div className={"flex gap-x-8 pt-12"}>
+        <div className={"flex lg:justify-center flex-col lg:flex-row gap-x-8 pt-12"}>
           <section>
             <div>
               <div className={"relative"}>
@@ -293,9 +293,9 @@ function App() {
 
             <h2 className={"text-preset-4 pt-12 text-neutral-200"}>Daily Forecast</h2>
 
-            <div className={"flex gap-x-4 pt-5"}>
+            <div className={"flex flex-wrap gap-4 pt-5"}>
               {displayWeather.daily.time.map((time, index) => (
-                <div className={"w-full space-y-4 rounded-xl bg-[#262540] py-4"} key={time}>
+                <div className={"min-w-[120px] flex-1 space-y-4 rounded-xl bg-[#262540] py-4"} key={time}>
                   <h3 className={"text-preset-6 text-center text-neutral-200"}>{new Date(time).toLocaleDateString("en-US", { weekday: "short" })}</h3>
                   <img alt={"Weather Icon"} className={"mx-auto size-[60px]"} src={getWeatherIcon(displayWeather.daily.weather_code[index])} />
                   <div className={"text-preset-7 flex justify-between px-2.5 text-neutral-200"}>
@@ -307,7 +307,7 @@ function App() {
             </div>
           </section>
 
-          <section className={"z-0 min-w-[384px] rounded-xl bg-[#262540] px-6"}>
+          <section className={"z-0 min-w-[384px] rounded-xl bg-[#262540] px-6 mt-8 lg:mt-0"}>
             <div className={"flex items-center justify-between pt-6"}>
               <h2 className={"text-preset-5 text-neutral-200"}>Hourly Forecast</h2>
 
