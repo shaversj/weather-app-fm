@@ -231,10 +231,14 @@ function App() {
                 type={"text"}
                 value={searchInput}
               />
+              <Button
+                className={"text-preset-5 flex h-10 shrink-0 rounded-xl bg-[#4658d9] px-4 text-neutral-200"}
+                disabled={!selectedLocation || isLoadingWeather}
+                onClick={() => {}}
+              >
+                {isLoadingWeather ? "Loading..." : "Search"}
+              </Button>
             </div>
-            <Button className={"text-preset-5 absolute top-0 right-0 flex h-14 items-center rounded-xl bg-[#4658d9] px-4 text-neutral-200"} disabled={!selectedLocation || isLoadingWeather} onClick={() => {}}>
-              {isLoadingWeather ? "Loading..." : "Search"}
-            </Button>
             {searchError && <p className={"text-preset-7 mt-2 text-red-400"}>Couldn't find cities. Try a different name.</p>}
             {showCityDropdown && cityResults && cityResults.length > 0 && (
               <div className={"absolute right-0 left-0 mt-1 rounded-xl bg-neutral-800"}>
