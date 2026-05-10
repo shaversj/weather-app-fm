@@ -38,11 +38,7 @@ function App() {
   const [showCityDropdown, setShowCityDropdown] = useState(false);
 
   const { data: cityResults, error: searchError } = useCitySearch(searchInput);
-  const { data: weatherData, error: weatherError, isLoading: isLoadingWeather, refetch } = useWeatherForecast(
-    selectedLocation?.latitude ?? null,
-    selectedLocation?.longitude ?? null,
-    isImperial ? 'fahrenheit' : 'celsius'
-  );
+  const { data: weatherData, error: weatherError, isLoading: isLoadingWeather, refetch } = useWeatherForecast(selectedLocation?.latitude ?? null, selectedLocation?.longitude ?? null, isImperial ? "fahrenheit" : "celsius");
 
   const displayWeather = weatherData ?? data;
   const displayLocation = selectedLocation?.name ?? "Berlin, Germany";
@@ -62,12 +58,12 @@ function App() {
     }
   }
 
-  function setTemperatureUnit(unit: 'Celsius' | 'Fahrenheit') {
+  function setTemperatureUnit(unit: "Celsius" | "Fahrenheit") {
     setTempUnit(unit);
-    const nowImperial = unit === 'Fahrenheit';
+    const nowImperial = unit === "Fahrenheit";
     setIsImperial(nowImperial);
-    setWindUnit(nowImperial ? 'mph' : 'km/h');
-    setprecipUnit(nowImperial ? 'inches' : 'mm');
+    setWindUnit(nowImperial ? "mph" : "km/h");
+    setprecipUnit(nowImperial ? "inches" : "mm");
     if (selectedLocation) {
       refetch();
     }
@@ -158,13 +154,29 @@ function App() {
 
               <p className={"text-preset-8 my-2 px-2 text-neutral-300"}>Temperature</p>
               <MenuItem>
-                <button className={"text-neutral-0 text-preset-7 flex h-[39px] w-full items-center px-2 py-2 hover:rounded-md hover:bg-gray-700"} onClick={() => { setIsImperial(false); setWindUnit("km/h"); setprecipUnit("mm"); setTemperatureUnit("Celsius"); }}>
+                <button
+                  className={"text-neutral-0 text-preset-7 flex h-[39px] w-full items-center px-2 py-2 hover:rounded-md hover:bg-gray-700"}
+                  onClick={() => {
+                    setIsImperial(false);
+                    setWindUnit("km/h");
+                    setprecipUnit("mm");
+                    setTemperatureUnit("Celsius");
+                  }}
+                >
                   <span>Celsius (°C)</span>
                   {tempUnit === "Celsius" ? <img alt={"Checkmark Icon"} className={"ml-auto size-4"} src={checkmark} /> : null}
                 </button>
               </MenuItem>
               <MenuItem>
-                <button className={"text-neutral-0 text-preset-7 flex h-[39px] w-full items-center px-2 py-2 hover:rounded-md hover:bg-gray-700"} onClick={() => { setIsImperial(true); setWindUnit("mph"); setprecipUnit("inches"); setTemperatureUnit("Fahrenheit"); }}>
+                <button
+                  className={"text-neutral-0 text-preset-7 flex h-[39px] w-full items-center px-2 py-2 hover:rounded-md hover:bg-gray-700"}
+                  onClick={() => {
+                    setIsImperial(true);
+                    setWindUnit("mph");
+                    setprecipUnit("inches");
+                    setTemperatureUnit("Fahrenheit");
+                  }}
+                >
                   <span>Fahrenheit (°F)</span>
                   {tempUnit === "Fahrenheit" ? <img alt={"Checkmark Icon"} className={"ml-auto size-4"} src={checkmark} /> : null}
                 </button>
@@ -206,7 +218,7 @@ function App() {
         <div className={"flex flex-col items-center"}>
           <h1 className={"text-preset-2 mt-16 text-white"}>How's the sky looking today?</h1>
           <div className={"relative mx-auto mt-16 w-full lg:w-[526px]"}>
-            <div className={"flex h-14 w-full items-center gap-3 rounded-xl bg-[#262540] px-4"}>
+            <div className={"flex h-14 w-full items-center gap-4 rounded-xl bg-[#262540] px-4"}>
               <img alt={"Search Icon"} className={"size-5"} src={search} />
               <Input
                 className={"text-preset-5 placeholder:text-preset-5 h-6 w-full text-neutral-200 placeholder-neutral-200 outline-none"}
@@ -220,18 +232,12 @@ function App() {
                 value={searchInput}
               />
             </div>
-            <Button
-              className={"text-preset-5 absolute right-0 top-0 flex h-14 items-center rounded-xl bg-[#4658d9] px-4 text-neutral-200"}
-              disabled={!selectedLocation || isLoadingWeather}
-              onClick={() => {}}
-            >
+            <Button className={"text-preset-5 absolute top-0 right-0 flex h-14 items-center rounded-xl bg-[#4658d9] px-4 text-neutral-200"} disabled={!selectedLocation || isLoadingWeather} onClick={() => {}}>
               {isLoadingWeather ? "Loading..." : "Search"}
             </Button>
-            {searchError && (
-              <p className={"text-preset-7 mt-2 text-red-400"}>Couldn't find cities. Try a different name.</p>
-            )}
+            {searchError && <p className={"text-preset-7 mt-2 text-red-400"}>Couldn't find cities. Try a different name.</p>}
             {showCityDropdown && cityResults && cityResults.length > 0 && (
-              <div className={"absolute left-0 right-0 mt-1 rounded-xl bg-neutral-800"}>
+              <div className={"absolute right-0 left-0 mt-1 rounded-xl bg-neutral-800"}>
                 {cityResults.map((city) => (
                   <button
                     className={"flex w-full items-center px-4 py-2 text-left hover:bg-neutral-700"}
@@ -243,52 +249,52 @@ function App() {
                     }}
                   >
                     <span className={"text-preset-5 text-neutral-200"}>{city.name}</span>
-                    <span className={"text-preset-7 ml-2 text-neutral-400"}>{city.admin1}, {city.country}</span>
+                    <span className={"text-preset-7 ml-2 text-neutral-400"}>
+                      {city.admin1}, {city.country}
+                    </span>
                   </button>
                 ))}
               </div>
             )}
           </div>
-          {weatherError && (
-            <p className={"text-preset-7 mt-2 text-red-400"}>Couldn't load weather data. Please try again.</p>
-          )}
+          {weatherError && <p className={"text-preset-7 mt-2 text-red-400"}>Couldn't load weather data. Please try again.</p>}
         </div>
 
-        <div className={"flex lg:justify-center flex-col lg:flex-row gap-x-8 pt-12"}>
+        <div className={"flex flex-col gap-x-8 pt-12 lg:flex-row lg:justify-center"}>
           <section>
             <div>
-              <div className={"p-6 rounded-4xl py-[41px] md:py-0 bg-no-repeat bg-[url(/bg-today-large.svg)] h-[286px]"}
-
-              >
+              <div className={"h-[286px] rounded-4xl bg-[url(/bg-today-large.svg)] bg-no-repeat p-6 py-[41px] md:py-0"}>
                 {/*<img alt={"Background Today"} className={"min-w-full"} src={"/bg-today-large.svg"} />*/}
-                <div className={" flex flex-col md:flex-row w-full items-center h-full"}>
+                <div className={"flex h-full w-full flex-col items-center md:flex-row"}>
                   <div className={""}>
                     <p className={"text-preset-4 text-white"}>{displayLocation}</p>
                     <p className={"text-preset-6 pt-3 text-white opacity-80"}>{new Date(displayWeather.current.time).toLocaleDateString("en-US", { day: "numeric", month: "long", year: "numeric" })}</p>
                   </div>
-                  <div className={"md:ml-auto flex items-center pr-3"}>
+                  <div className={"flex items-center pr-3 md:ml-auto"}>
                     <img alt={"Weather Icon"} className={"size-[120px]"} src={getWeatherIcon(displayWeather.current.weather_code)} />
                     <span className={"text-preset-1 text-white"}>{displayTemp(displayWeather.current.temperature_2m)}°</span>
                   </div>
                 </div>
               </div>
               <div></div>
-              <div className={"mt-8 flex w-full gap-x-6 flex-wrap md:flex-nowrap gap-y-4"}>
-                <div className={"w-full space-y-6 rounded-xl bg-[#262540] p-5 max-w-[163.5px] max-h-[118px] md:max-w-none md:max-h-none"}>
+              <div className={"mt-8 flex w-full flex-wrap gap-x-6 gap-y-4 md:flex-nowrap"}>
+                <div className={"max-h-[118px] w-full max-w-[163.5px] space-y-6 rounded-xl bg-[#262540] p-5 md:max-h-none md:max-w-none"}>
                   <h3 className={"text-preset-6 text-neutral-200"}>Feels Like</h3>
-                  <span className={"text-preset-3 text-neutral-200 text-nowrap"}>{displayTemp(displayWeather.current.temperature_2m)}°</span>
+                  <span className={"text-preset-3 text-nowrap text-neutral-200"}>{displayTemp(displayWeather.current.temperature_2m)}°</span>
                 </div>
-                <div className={"w-full space-y-6 rounded-xl bg-[#262540] p-5 max-w-[163.5px] max-h-[118px] md:max-w-none md:max-h-none"}>
+                <div className={"max-h-[118px] w-full max-w-[163.5px] space-y-6 rounded-xl bg-[#262540] p-5 md:max-h-none md:max-w-none"}>
                   <h3 className={"text-preset-6 text-neutral-200"}>Humidity</h3>
-                  <span className={"text-preset-3 text-neutral-200 text-nowrap"}>{displayWeather.current.relative_humidity_2m}%</span>
+                  <span className={"text-preset-3 text-nowrap text-neutral-200"}>{displayWeather.current.relative_humidity_2m}%</span>
                 </div>
-                <div className={"w-full space-y-6 rounded-xl bg-[#262540] p-5 max-w-[163.5px] max-h-[118px] md:max-w-none md:max-h-none"}>
+                <div className={"max-h-[118px] w-full max-w-[163.5px] space-y-6 rounded-xl bg-[#262540] p-5 md:max-h-none md:max-w-none"}>
                   <h3 className={"text-preset-6 text-neutral-200"}>Wind</h3>
-                  <span className={"text-preset-3 text-neutral-200 text-nowrap"}>{displayWeather.current.wind_speed_10m} {isImperial ? 'mph' : 'km/h'}</span>
+                  <span className={"text-preset-3 text-nowrap text-neutral-200"}>
+                    {displayWeather.current.wind_speed_10m} {isImperial ? "mph" : "km/h"}
+                  </span>
                 </div>
-                <div className={"w-full space-y-6 rounded-xl bg-[#262540] p-5 max-w-[163.5px] max-h-[118px] md:max-w-none md:max-h-none"}>
+                <div className={"max-h-[118px] w-full max-w-[163.5px] space-y-6 rounded-xl bg-[#262540] p-5 md:max-h-none md:max-w-none"}>
                   <h3 className={"text-preset-6 text-neutral-200"}>Precipitation</h3>
-                  <span className={"text-preset-3 text-neutral-200 text-nowrap"}>{displayWeather.current.precipitation} mm</span>
+                  <span className={"text-preset-3 text-nowrap text-neutral-200"}>{displayWeather.current.precipitation} mm</span>
                 </div>
               </div>
             </div>
@@ -297,7 +303,7 @@ function App() {
 
             <div className={"flex flex-wrap gap-4 pt-5"}>
               {displayWeather.daily.time.map((time, index) => (
-                <div className={"max-w-[103px] md:max-w-[89px] lg:max-w-[100.5px] flex-1 space-y-4 rounded-xl bg-[#262540] py-4"} key={time}>
+                <div className={"max-w-[103px] flex-1 space-y-4 rounded-xl bg-[#262540] py-4 md:max-w-[89px] lg:max-w-[100.5px]"} key={time}>
                   <h3 className={"text-preset-6 text-center text-neutral-200"}>{new Date(time).toLocaleDateString("en-US", { weekday: "short" })}</h3>
                   <img alt={"Weather Icon"} className={"mx-auto size-[60px]"} src={getWeatherIcon(displayWeather.daily.weather_code[index])} />
                   <div className={"text-preset-7 flex justify-between px-2.5 text-neutral-200"}>
@@ -309,7 +315,7 @@ function App() {
             </div>
           </section>
 
-          <section className={"z-0 min-w-[384px] rounded-xl bg-[#262540] px-6 mt-8 lg:mt-0"}>
+          <section className={"z-0 mt-8 min-w-[384px] rounded-xl bg-[#262540] px-6 lg:mt-0"}>
             <div className={"flex items-center justify-between pt-6"}>
               <h2 className={"text-preset-5 text-neutral-200"}>Hourly Forecast</h2>
 
