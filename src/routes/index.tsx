@@ -233,17 +233,13 @@ function App() {
                   value={searchInput}
                 />
               </div>
-              <Button
-                className={"text-preset-5 flex h-14 shrink-0 rounded-xl bg-[#4658d9] px-4 text-neutral-200"}
-                disabled={!selectedLocation || isLoadingWeather}
-                onClick={() => {}}
-              >
-                {isLoadingWeather ? "Loading..." : "Search"}
+              <Button className={"text-preset-5 flex h-14 shrink-0 items-center rounded-xl bg-[#4658d9] px-4 text-neutral-200"} disabled={!selectedLocation || isLoadingWeather} onClick={() => {}}>
+                {isLoadingWeather ? "Search" : "Search"}
               </Button>
             </div>
             {searchError && <p className={"text-preset-7 mt-2 text-red-400"}>Couldn't find cities. Try a different name.</p>}
             {showCityDropdown && cityResults && cityResults.length > 0 && (
-              <div className={"absolute left-0 right-0 mt-1 rounded-xl bg-neutral-800"}>
+              <div className={"absolute right-0 left-0 mt-1 rounded-xl bg-neutral-800"}>
                 {cityResults.map((city) => (
                   <button
                     className={"flex w-full items-center px-4 py-2 text-left hover:bg-neutral-700"}
