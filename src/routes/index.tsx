@@ -203,13 +203,13 @@ function App() {
         </div>
       </header>
       <main className={""}>
-        <div className={"grid place-items-center"}>
+        <div className={"flex flex-col items-center"}>
           <h1 className={"text-preset-2 mt-16 text-white"}>How's the sky looking today?</h1>
-          <div className={"mx-auto mt-16 flex h-14 w-full justify-center gap-x-4"}>
-            <div className={"flex items-center gap-3 rounded-xl bg-[#262540] px-4 lg:w-[526px]"}>
+          <div className={"relative mx-auto mt-16 w-full lg:w-[526px]"}>
+            <div className={"flex h-14 w-full items-center gap-3 rounded-xl bg-[#262540] px-4"}>
               <img alt={"Search Icon"} className={"size-5"} src={search} />
               <Input
-                className={"text-preset-5 placeholder:text-preset-5 h-6 text-neutral-200 placeholder-neutral-200 outline-none"}
+                className={"text-preset-5 placeholder:text-preset-5 h-6 w-full text-neutral-200 placeholder-neutral-200 outline-none"}
                 name={"Search"}
                 onChange={(e) => {
                 setSearchInput(e.target.value);
@@ -221,34 +221,34 @@ function App() {
               />
             </div>
             <Button
-              className={"text-preset-5 rounded-xl bg-[#4658d9] px-4 text-neutral-200"}
+              className={"text-preset-5 absolute right-0 top-0 flex h-14 items-center rounded-xl bg-[#4658d9] px-4 text-neutral-200"}
               disabled={!selectedLocation || isLoadingWeather}
               onClick={() => {}}
             >
               {isLoadingWeather ? "Loading..." : "Search"}
             </Button>
+            {searchError && (
+              <p className={"text-preset-7 mt-2 text-red-400"}>Couldn't find cities. Try a different name.</p>
+            )}
+            {showCityDropdown && cityResults && cityResults.length > 0 && (
+              <div className={"absolute left-0 right-0 mt-1 rounded-xl bg-neutral-800"}>
+                {cityResults.map((city) => (
+                  <button
+                    className={"flex w-full items-center px-4 py-2 text-left hover:bg-neutral-700"}
+                    key={city.id}
+                    onClick={() => {
+                      setSelectedLocation(city);
+                      setSearchInput(city.name);
+                      setShowCityDropdown(false);
+                    }}
+                  >
+                    <span className={"text-preset-5 text-neutral-200"}>{city.name}</span>
+                    <span className={"text-preset-7 ml-2 text-neutral-400"}>{city.admin1}, {city.country}</span>
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
-          {searchError && (
-            <p className={"text-preset-7 mt-2 text-red-400"}>Couldn't find cities. Try a different name.</p>
-          )}
-          {showCityDropdown && cityResults && cityResults.length > 0 && (
-            <div className={"mx-auto mt-2 w-full max-w-[526px] rounded-xl bg-neutral-800"}>
-              {cityResults.map((city) => (
-                <button
-                  className={"flex w-full items-center px-4 py-2 text-left hover:bg-neutral-700"}
-                  key={city.id}
-                  onClick={() => {
-                    setSelectedLocation(city);
-                    setSearchInput(city.name);
-                    setShowCityDropdown(false);
-                  }}
-                >
-                  <span className={"text-preset-5 text-neutral-200"}>{city.name}</span>
-                  <span className={"text-preset-7 ml-2 text-neutral-400"}>{city.admin1}, {city.country}</span>
-                </button>
-              ))}
-            </div>
-          )}
           {weatherError && (
             <p className={"text-preset-7 mt-2 text-red-400"}>Couldn't load weather data. Please try again.</p>
           )}
