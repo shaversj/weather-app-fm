@@ -218,28 +218,27 @@ function App() {
         <div className={"flex flex-col items-center"}>
           <h1 className={"text-preset-2 mt-16 text-white"}>How's the sky looking today?</h1>
           <div className={"relative mx-auto mt-16 flex w-full items-center gap-4 lg:w-[526px]"}>
-              <div className={"flex h-14 w-full items-center gap-4 rounded-xl bg-[#262540] px-4"}>
-                <img alt={"Search Icon"} className={"size-5"} src={search} />
-                <Input
-                  className={"text-preset-5 placeholder:text-preset-5 h-6 w-full text-neutral-200 placeholder-neutral-200 outline-none"}
-                  name={"Search"}
-                  onChange={(e) => {
+            <div className={"flex h-14 w-full items-center gap-4 rounded-xl bg-[#262540] px-4"}>
+              <img alt={"Search Icon"} className={"size-5"} src={search} />
+              <Input
+                className={"text-preset-5 placeholder:text-preset-5 h-6 w-full text-neutral-200 placeholder-neutral-200 outline-none"}
+                name={"Search"}
+                onChange={(e) => {
                   setSearchInput(e.target.value);
                   setShowCityDropdown(true);
                 }}
-                  placeholder={"Search for a place..."}
-                  type={"text"}
-                  value={searchInput}
-                />
-              </div>
-              <Button
-                className={"text-preset-5 flex h-14 shrink-0 rounded-xl bg-[#4658d9] px-4 text-neutral-200"}
-                disabled={!selectedLocation || isLoadingWeather}
-                onClick={() => {}}
-              >
-                {isLoadingWeather ? "Loading..." : "Search"}
-              </Button>
+                placeholder={"Search for a place..."}
+                type={"text"}
+                value={searchInput}
+              />
             </div>
+            <Button
+              className={"text-preset-5 flex h-14 shrink-0 rounded-xl bg-[#4658d9] px-4 text-neutral-200"}
+              disabled={!selectedLocation || isLoadingWeather}
+              onClick={() => {}}
+            >
+              {isLoadingWeather ? "Loading..." : "Search"}
+            </Button>
             {searchError && <p className={"text-preset-7 mt-2 text-red-400"}>Couldn't find cities. Try a different name.</p>}
             {showCityDropdown && cityResults && cityResults.length > 0 && (
               <div className={"absolute right-0 left-0 mt-1 rounded-xl bg-neutral-800"}>
