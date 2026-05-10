@@ -217,7 +217,7 @@ function App() {
       <main className={""}>
         <div className={"flex flex-col items-center"}>
           <h1 className={"text-preset-2 mt-16 text-white"}>How's the sky looking today?</h1>
-          <div className={"relative mx-auto mt-16 lg:w-[526px]"}>
+          <div className={"relative mx-auto mt-16 lg:w-[625px]"}>
             <div className={"flex w-full items-center gap-4"}>
               <div className={"flex h-14 w-full items-center gap-4 rounded-xl bg-[#262540] px-4"}>
                 <img alt={"Search Icon"} className={"size-5"} src={search} />
@@ -265,7 +265,7 @@ function App() {
         <div className={"flex flex-col gap-x-8 pt-12 lg:flex-row lg:justify-center"}>
           <section>
             <div>
-              <div className={"h-[286px] rounded-4xl bg-[url(/bg-today-large.svg)] bg-no-repeat p-6 py-[41px] md:py-0"}>
+              <div className={"h-[286px] rounded-4xl bg-[url(/bg-today-large.svg)] bg-no-repeat p-6 py-[41px] md:py-0 lg:min-w-[800px]"}>
                 {/*<img alt={"Background Today"} className={"min-w-full"} src={"/bg-today-large.svg"} />*/}
                 <div className={"flex h-full w-full flex-col items-center md:flex-row"}>
                   <div className={""}>
