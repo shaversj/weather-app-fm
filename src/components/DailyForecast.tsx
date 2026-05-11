@@ -4,11 +4,10 @@ import { WeatherIcon } from "./WeatherIcon";
 
 interface DailyForecastProps {
   daily: WeatherData["daily"];
-  isImperial: boolean;
 }
 
-export function DailyForecast({ daily, isImperial }: DailyForecastProps) {
-  const convertTemp = (temp: number) => (isImperial ? Math.round((temp * 9) / 5 + 32) : Math.round(temp));
+export function DailyForecast({ daily }: DailyForecastProps) {
+  const convertTemp = (temp: number) => Math.round(temp);
 
   return (
     <>

@@ -9,13 +9,12 @@ import { WeatherIcon } from "./WeatherIcon";
 interface HourlyForecastProps {
   daily: WeatherData["daily"];
   hourly: WeatherData["hourly"];
-  isImperial: boolean;
   onSelectDay: (day: string) => void;
   selectedDay: string;
 }
 
-export function HourlyForecast({ daily, hourly, isImperial, onSelectDay, selectedDay }: HourlyForecastProps) {
-  const convertTemp = (temp: number) => (isImperial ? Math.round((temp * 9) / 5 + 32) : Math.round(temp));
+export function HourlyForecast({ daily, hourly, onSelectDay, selectedDay }: HourlyForecastProps) {
+  const convertTemp = (temp: number) => Math.round(temp);
 
   const currentHour = new Date().getHours();
   const hourlyItems = hourly.time

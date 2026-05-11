@@ -6,7 +6,7 @@ interface WeatherStatsProps {
 }
 
 export function WeatherStats({ isImperial, weather }: WeatherStatsProps) {
-  const tempValue = isImperial ? Math.round((weather.temperature_2m * 9) / 5 + 32) : Math.round(weather.temperature_2m);
+  const tempValue = Math.round(weather.temperature_2m);
   const tempUnit = isImperial ? "°F" : "°C";
   const windValue = isImperial ? Math.round(weather.wind_speed_10m * 0.621371) : weather.wind_speed_10m;
   const windUnit = isImperial ? "mph" : "km/h";

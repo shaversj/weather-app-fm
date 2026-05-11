@@ -85,12 +85,12 @@ function App() {
 
         <div className="flex flex-col gap-x-8 pt-12 lg:flex-row lg:justify-center">
           <section>
-            <CurrentWeather location={displayLocation} temperatureUnit={tempUnit} weather={displayWeather.current} />
+            <CurrentWeather location={displayLocation} weather={displayWeather.current} />
             <WeatherStats isImperial={isImperial} weather={displayWeather.current} />
-            <DailyForecast daily={displayWeather.daily} isImperial={isImperial} />
+            <DailyForecast daily={displayWeather.daily} />
           </section>
 
-          <HourlyForecast daily={displayWeather.daily} hourly={displayWeather.hourly} isImperial={isImperial} onSelectDay={setSelectedDay} selectedDay={selectedDay} />
+          <HourlyForecast daily={displayWeather.daily} hourly={displayWeather.hourly} onSelectDay={setSelectedDay} selectedDay={selectedDay} />
         </div>
       </main>
     </div>
