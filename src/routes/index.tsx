@@ -19,6 +19,25 @@ import logo from "/logo.svg";
 const BERLIN_LAT = 52.5244;
 const BERLIN_LON = 13.4105;
 
+async function reverseGeocode(lat: number, lon: number): Promise<string> {
+  const url = new URL("https://geocoding-api.open-meteo.com/v1/search");
+  url.searchParams.set("latitude", lat.toString());
+  url.searchParams.set("longitude", lon.toString());
+  url.searchParams.set("count", "1");
+  url.searchParams.set("language", "en");
+  url.searchParams.set("format", "json");
+
+  const response = await fetch(url.toString());
+  if (!response.ok) return "Current Location";
+
+  const data = await response.json();
+  if (data.results && data.results.length > 0) {
+    const result = data.results[0];
+    return result.admin1 ? `${result.name}, ${result.admin1}` : `${result.name}, ${result.country}`;
+  }
+  return "Current Location";
+}
+
 export const Route = createFileRoute("/")({
   component: App,
 });
@@ -29,19 +48,25 @@ function App() {
   const [searchInput, setSearchInput] = useState("");
   const [selectedLocation, setSelectedLocation] = useState<Location | null>(null);
   const [defaultLocation, setDefaultLocation] = useState<{ lat: number; lon: number } | null>(null);
+  const [defaultLocationName, setDefaultLocationName] = useState<string>("Loading...");
 
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setDefaultLocation({ lat: position.coords.latitude, lon: position.coords.longitude });
+        async (position) => {
+          const { latitude, longitude } = position.coords;
+          setDefaultLocation({ lat: latitude, lon: longitude });
+          const name = await reverseGeocode(latitude, longitude);
+          setDefaultLocationName(name);
         },
         () => {
           setDefaultLocation({ lat: BERLIN_LAT, lon: BERLIN_LON });
+          setDefaultLocationName("Berlin, Germany");
         },
       );
     } else {
       setDefaultLocation({ lat: BERLIN_LAT, lon: BERLIN_LON });
+      setDefaultLocationName("Berlin, Germany");
     }
   }, []);
 
@@ -53,7 +78,7 @@ function App() {
 
   const { data: weatherData, error: weatherError, isLoading: isLoadingWeather, refetch } = useWeatherForecast(lat, lon, isImperial ? "fahrenheit" : "celsius");
 
-  const displayLocation = selectedLocation?.name ?? "Current Location";
+  const displayLocation = selectedLocation?.name ?? defaultLocationName;
 
   const tempUnit = isImperial ? "Fahrenheit" : "Celsius";
   const windUnit = isImperial ? "mph" : "km/h";
