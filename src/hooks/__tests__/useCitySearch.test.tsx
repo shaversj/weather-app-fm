@@ -1,50 +1,48 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { renderHook, waitFor } from '@testing-library/react'
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { renderHook, waitFor } from "@testing-library/react";
 
-import { searchCities, useCitySearch } from '../useCitySearch'
+import { searchCities, useCitySearch } from "../useCitySearch";
 
 const createWrapper = () => {
-  const queryClient = new QueryClient()
-  return ({ children }: { children: React.ReactNode }) => (
-    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-  )
-}
+  const queryClient = new QueryClient();
+  return ({ children }: { children: React.ReactNode }) => <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
+};
 
-describe('useCitySearch', () => {
-  const originalFetch = globalThis.fetch
+describe("useCitySearch", () => {
+  const originalFetch = globalThis.fetch;
 
   beforeEach(() => {
-    globalThis.fetch = vi.fn()
-  })
+    globalThis.fetch = vi.fn();
+  });
 
   afterEach(() => {
-    globalThis.fetch = originalFetch
-  })
+    globalThis.fetch = originalFetch;
+  });
 
-  it('returns empty when query < 2 chars', async () => {
-    const { result } = renderHook(() => useCitySearch('a'), { wrapper: createWrapper() })
-    expect(result.current.data).toBeUndefined()
-  })
+  it("returns empty when query < 2 chars", async () => {
+    const { result } = renderHook(() => useCitySearch("a"), { wrapper: createWrapper() });
+    expect(result.current.data).toBeUndefined();
+  });
 
-  it('fetches cities when query >= 2 chars', async () => {
+  it("fetches cities when query >= 2 chars", async () => {
     globalThis.fetch = vi.fn().mockResolvedValue({
-      json: () => Promise.resolve({ results: [{ country: 'US', id: 1, latitude: 37.2, longitude: -93.3, name: 'Springfield', timezone: 'America/Chicago' }] }),
+      json: () => Promise.resolve({ results: [{ country: "US", id: 1, latitude: 37.2, longitude: -93.3, name: "Springfield", timezone: "America/Chicago" }] }),
       ok: true,
-    })
+    });
 
-    const { result } = renderHook(() => useCitySearch('Spring'), { wrapper: createWrapper() })
-    await waitFor(() => expect(result.current.isLoading).toBe(false))
-    expect(result.current.data).toHaveLength(1)
-  })
+    const { result } = renderHook(() => useCitySearch("Spring"), { wrapper: createWrapper() });
+    await waitFor(() => expect(result.current.isLoading).toBe(false));
+    expect(result.current.data).toHaveLength(1);
+  });
 
-  it('throws error when API response is not ok', async () => {
-    ;(globalThis.fetch as ReturnType<typeof vi.fn>).mockImplementation(() =>
+  it("throws error when API response is not ok", async () => {
+    (globalThis.fetch as ReturnType<typeof vi.fn>).mockImplementation(() =>
       Promise.resolve({
         json: () => Promise.resolve({}),
         ok: false,
-      })
-    )
+      }),
+    );
 
-    await expect(searchCities('Spring')).rejects.toThrow('Geocoding failed')
-  })
-})
+    await expect(searchCities("Spring")).rejects.toThrow("Geocoding failed");
+  });
+});
