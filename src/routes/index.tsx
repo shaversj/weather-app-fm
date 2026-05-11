@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import type { Location } from "../hooks/useCitySearch";
 
@@ -10,12 +10,14 @@ import { SearchSection } from "../components/SearchSection";
 import { UnitsMenu } from "../components/UnitsMenu";
 import { WeatherStats } from "../components/WeatherStats";
 import { DEBOUNCE_DELAY_MS } from "../constants/weather";
-import { weatherData as data } from "../data/mydata";
 import { useCitySearch } from "../hooks/useCitySearch";
 import { useDebounce } from "../hooks/useDebounce";
 import { useWeatherForecast } from "../hooks/useWeatherForecast";
 
 import logo from "/logo.svg";
+
+const BERLIN_LAT = 52.5244;
+const BERLIN_LON = 13.4105;
 
 export const Route = createFileRoute("/")({
   component: App,
@@ -26,13 +28,32 @@ function App() {
   const [isImperial, setIsImperial] = useState(false);
   const [searchInput, setSearchInput] = useState("");
   const [selectedLocation, setSelectedLocation] = useState<Location | null>(null);
+  const [defaultLocation, setDefaultLocation] = useState<{ lat: number; lon: number } | null>(null);
+
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setDefaultLocation({ lat: position.coords.latitude, lon: position.coords.longitude });
+        },
+        () => {
+          setDefaultLocation({ lat: BERLIN_LAT, lon: BERLIN_LON });
+        },
+      );
+    } else {
+      setDefaultLocation({ lat: BERLIN_LAT, lon: BERLIN_LON });
+    }
+  }, []);
 
   const debouncedSearchInput = useDebounce(searchInput, DEBOUNCE_DELAY_MS);
   const { data: cityResults, error: searchError } = useCitySearch(debouncedSearchInput);
-  const { data: weatherData, error: weatherError, isLoading: isLoadingWeather, refetch } = useWeatherForecast(selectedLocation?.latitude ?? null, selectedLocation?.longitude ?? null, isImperial ? "fahrenheit" : "celsius");
 
-  const displayWeather = weatherData ?? data;
-  const displayLocation = selectedLocation?.name ?? "Berlin, Germany";
+  const lat = selectedLocation?.latitude ?? defaultLocation?.lat ?? null;
+  const lon = selectedLocation?.longitude ?? defaultLocation?.lon ?? null;
+
+  const { data: weatherData, error: weatherError, isLoading: isLoadingWeather, refetch } = useWeatherForecast(lat, lon, isImperial ? "fahrenheit" : "celsius");
+
+  const displayLocation = selectedLocation?.name ?? "Current Location";
 
   const tempUnit = isImperial ? "Fahrenheit" : "Celsius";
   const windUnit = isImperial ? "mph" : "km/h";
@@ -61,6 +82,19 @@ function App() {
     setSelectedLocation(location);
   };
 
+  if (!defaultLocation) {
+    return (
+      <div className="min-h-screen bg-neutral-900 px-[clamp(1rem,2vw+0.5rem,7rem)] pt-[clamp(1rem,1.5vw+0.5rem,3rem)] antialiased lg:pb-20">
+        <header className="flex justify-between">
+          <img alt="Logo" src={logo} />
+        </header>
+        <main className="flex flex-col items-center justify-center min-h-[60vh]">
+          <p className="text-preset-5 text-white">Loading...</p>
+        </main>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-neutral-900 px-[clamp(1rem,2vw+0.5rem,7rem)] pt-[clamp(1rem,1.5vw+0.5rem,3rem)] antialiased lg:pb-20">
       <header className="flex justify-between">
@@ -83,15 +117,17 @@ function App() {
           {weatherError && <p className="text-preset-7 mt-2 text-red-400">Couldn&apos;t load weather data. Please try again.</p>}
         </div>
 
-        <div className="flex flex-col gap-x-8 pt-12 lg:flex-row lg:justify-center">
-          <section>
-            <CurrentWeather location={displayLocation} weather={displayWeather.current} />
-            <WeatherStats isImperial={isImperial} weather={displayWeather.current} />
-            <DailyForecast daily={displayWeather.daily} />
-          </section>
+        {weatherData && (
+          <div className="flex flex-col gap-x-8 pt-12 lg:flex-row lg:justify-center">
+            <section>
+              <CurrentWeather location={displayLocation} weather={weatherData.current} />
+              <WeatherStats isImperial={isImperial} weather={weatherData.current} />
+              <DailyForecast daily={weatherData.daily} />
+            </section>
 
-          <HourlyForecast daily={displayWeather.daily} hourly={displayWeather.hourly} onSelectDay={setSelectedDay} selectedDay={selectedDay} />
-        </div>
+            <HourlyForecast daily={weatherData.daily} hourly={weatherData.hourly} onSelectDay={setSelectedDay} selectedDay={selectedDay} />
+          </div>
+        )}
       </main>
     </div>
   );
