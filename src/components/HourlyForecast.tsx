@@ -1,6 +1,5 @@
 import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from "@headlessui/react";
 import clsx from "clsx";
-import { useCallback } from "react";
 
 import type { WeatherData } from "../types/weather";
 
@@ -16,14 +15,6 @@ interface HourlyForecastProps {
 }
 
 export function HourlyForecast({ daily, hourly, isImperial, onSelectDay, selectedDay }: HourlyForecastProps) {
-  const handleDayChange = useCallback(
-    (day: string) => {
-      const weekday = new Date(day).toLocaleDateString("en-US", { weekday: "long" });
-      onSelectDay(weekday);
-    },
-    [onSelectDay],
-  );
-
   const convertTemp = (temp: number) => (isImperial ? Math.round((temp * 9) / 5 + 32) : Math.round(temp));
 
   const currentHour = new Date().getHours();
@@ -46,7 +37,7 @@ export function HourlyForecast({ daily, hourly, isImperial, onSelectDay, selecte
         <h2 className="text-preset-5 text-neutral-200">Hourly Forecast</h2>
 
         <div className="w-40">
-          <Listbox onChange={handleDayChange} value={selectedDay}>
+          <Listbox onChange={(day) => onSelectDay(new Date(day).toLocaleDateString("en-US", { weekday: "long" }))} value={selectedDay}>
             <ListboxButton
               className={clsx("relative block w-full rounded-lg bg-white/5 py-1.5 pr-8 pl-3 text-left text-sm/6 text-white", "focus:not-data-focus:outline-none data-focus:outline-2 data-focus:-outline-offset-2 data-focus:outline-white/25")}
             >

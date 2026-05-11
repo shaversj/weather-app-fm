@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Home, Menu, Network, X } from "lucide-react";
+import { Home, Menu, X } from "lucide-react";
 import { useState } from "react";
 
 export default function Header() {
@@ -38,22 +38,6 @@ export default function Header() {
             <Home size={20} />
             <span className="font-medium">Home</span>
           </Link>
-
-          {/* Demo Links Start */}
-
-          <Link
-            activeProps={{
-              className: "flex items-center gap-3 p-3 rounded-lg bg-cyan-600 hover:bg-cyan-700 transition-colors mb-2",
-            }}
-            className="mb-2 flex items-center gap-3 rounded-lg p-3 transition-colors hover:bg-gray-800"
-            onClick={() => setIsOpen(false)}
-            to="/demo/tanstack-query"
-          >
-            <Network size={20} />
-            <span className="font-medium">TanStack Query</span>
-          </Link>
-
-          {/* Demo Links End */}
         </nav>
       </aside>
     </>

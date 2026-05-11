@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useCallback, useState } from "react";
+import { useState } from "react";
 
 import type { Location } from "../hooks/useCitySearch";
 
@@ -34,45 +34,32 @@ function App() {
   const displayWeather = weatherData ?? data;
   const displayLocation = selectedLocation?.name ?? "Berlin, Germany";
 
-  // Derived units from isImperial
   const tempUnit = isImperial ? "Fahrenheit" : "Celsius";
   const windUnit = isImperial ? "mph" : "km/h";
   const precipUnit = isImperial ? "inches" : "mm";
 
-  // Event handlers
-  const handleToggleUnits = useCallback(() => {
+  const handleToggleUnits = () => {
     setIsImperial((prev) => !prev);
     if (selectedLocation) refetch();
-  }, [selectedLocation, refetch]);
+  };
 
-  const handleSetTemperature = useCallback(
-    (unit: "celsius" | "fahrenheit") => {
-      const nowImperial = unit === "fahrenheit";
-      setIsImperial(nowImperial);
-      if (selectedLocation) refetch();
-    },
-    [selectedLocation, refetch],
-  );
-
-  const handleSetWindSpeed = useCallback(
-    (unit: "km/h" | "mph") => {
-      setIsImperial(unit === "mph");
-      if (selectedLocation) refetch();
-    },
-    [selectedLocation, refetch],
-  );
-
-  const handleSetPrecipitation = useCallback(() => {
+  const handleSetTemperature = (unit: "celsius" | "fahrenheit") => {
+    setIsImperial(unit === "fahrenheit");
     if (selectedLocation) refetch();
-  }, [selectedLocation, refetch]);
+  };
 
-  const handleSelectLocation = useCallback((location: Location) => {
+  const handleSetWindSpeed = (unit: "km/h" | "mph") => {
+    setIsImperial(unit === "mph");
+    if (selectedLocation) refetch();
+  };
+
+  const handleSetPrecipitation = () => {
+    if (selectedLocation) refetch();
+  };
+
+  const handleSelectLocation = (location: Location) => {
     setSelectedLocation(location);
-  }, []);
-
-  const handleSelectDay = useCallback((day: string) => {
-    setSelectedDay(day);
-  }, []);
+  };
 
   return (
     <div className="min-h-screen bg-neutral-900 px-[clamp(1rem,2vw+0.5rem,7rem)] pt-[clamp(1rem,1.5vw+0.5rem,3rem)] antialiased lg:pb-20">
@@ -103,7 +90,7 @@ function App() {
             <DailyForecast daily={displayWeather.daily} isImperial={isImperial} />
           </section>
 
-          <HourlyForecast daily={displayWeather.daily} hourly={displayWeather.hourly} isImperial={isImperial} onSelectDay={handleSelectDay} selectedDay={selectedDay} />
+          <HourlyForecast daily={displayWeather.daily} hourly={displayWeather.hourly} isImperial={isImperial} onSelectDay={setSelectedDay} selectedDay={selectedDay} />
         </div>
       </main>
     </div>
