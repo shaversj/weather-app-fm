@@ -42,7 +42,7 @@ export const Route = createFileRoute("/")({
   component: App,
 });
 
-function App() {
+export function App() {
   const [selectedDay, setSelectedDay] = useState(new Date().toLocaleDateString("en-US", { weekday: "long" }));
   const [isImperial, setIsImperial] = useState(false);
   const [searchInput, setSearchInput] = useState("");
@@ -76,7 +76,7 @@ function App() {
   const lat = selectedLocation?.latitude ?? defaultLocation?.lat ?? null;
   const lon = selectedLocation?.longitude ?? defaultLocation?.lon ?? null;
 
-  const { data: weatherData, error: weatherError, isLoading: isLoadingWeather, refetch } = useWeatherForecast(lat, lon, isImperial ? "fahrenheit" : "celsius");
+  const { data: weatherData, error: weatherError, isFetching: isFetchingWeather, isPending: isLoadingWeather, refetch } = useWeatherForecast(lat, lon, isImperial ? "fahrenheit" : "celsius");
 
   const displayLocation = selectedLocation?.name ?? defaultLocationName;
 
@@ -113,7 +113,7 @@ function App() {
         <header className="flex justify-between">
           <img alt="Logo" src={logo} />
         </header>
-        <main className="flex flex-col items-center justify-center min-h-[60vh]">
+        <main className="flex min-h-[60vh] flex-col items-center justify-center">
           <p className="text-preset-5 text-white">Loading...</p>
         </main>
       </div>
@@ -142,15 +142,15 @@ function App() {
           {weatherError && <p className="text-preset-7 mt-2 text-red-400">Couldn&apos;t load weather data. Please try again.</p>}
         </div>
 
-        {weatherData && (
+        {(weatherData || isLoadingWeather || isFetchingWeather) && (
           <div className="flex flex-col gap-x-8 pt-12 lg:flex-row lg:justify-center">
             <section>
-              <CurrentWeather location={displayLocation} weather={weatherData.current} />
-              <WeatherStats isImperial={isImperial} weather={weatherData.current} />
-              <DailyForecast daily={weatherData.daily} />
+              <CurrentWeather location={displayLocation} weather={weatherData?.current} isLoadingWeather={isLoadingWeather || isFetchingWeather} />
+              {weatherData ? <WeatherStats isImperial={isImperial} weather={weatherData.current} /> : null}
+              {weatherData ? <DailyForecast daily={weatherData.daily} /> : null}
             </section>
 
-            <HourlyForecast daily={weatherData.daily} hourly={weatherData.hourly} onSelectDay={setSelectedDay} selectedDay={selectedDay} />
+            {weatherData ? <HourlyForecast daily={weatherData.daily} hourly={weatherData.hourly} onSelectDay={setSelectedDay} selectedDay={selectedDay} /> : null}
           </div>
         )}
       </main>
