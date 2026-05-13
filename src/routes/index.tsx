@@ -8,6 +8,7 @@ import { DailyForecast } from "../components/DailyForecast";
 import { HourlyForecast } from "../components/HourlyForecast";
 import { SearchSection } from "../components/SearchSection";
 import { UnitsMenu } from "../components/UnitsMenu";
+import { WeatherDashboardSkeleton } from "../components/WeatherDashboardSkeleton";
 import { WeatherStats } from "../components/WeatherStats";
 import { DEBOUNCE_DELAY_MS } from "../constants/weather";
 import { useCitySearch } from "../hooks/useCitySearch";
@@ -76,7 +77,9 @@ export function App() {
   const lat = selectedLocation?.latitude ?? defaultLocation?.lat ?? null;
   const lon = selectedLocation?.longitude ?? defaultLocation?.lon ?? null;
 
-  const { data: weatherData, error: weatherError, isFetching: isFetchingWeather, isPending: isLoadingWeather, refetch } = useWeatherForecast(lat, lon, isImperial ? "fahrenheit" : "celsius");
+  const { data: weatherData, error: weatherError, isFetching: isFetchingWeather, isPending: isLoadingWeather } = useWeatherForecast(lat, lon, isImperial ? "fahrenheit" : "celsius");
+  const showWeatherSkeleton = isLoadingWeather || isFetchingWeather;
+  const showWeatherDashboard = showWeatherSkeleton || Boolean(weatherData);
 
   const displayLocation = selectedLocation?.name ?? defaultLocationName;
 
@@ -86,22 +89,17 @@ export function App() {
 
   const handleToggleUnits = () => {
     setIsImperial((prev) => !prev);
-    if (selectedLocation) refetch();
   };
 
   const handleSetTemperature = (unit: "celsius" | "fahrenheit") => {
     setIsImperial(unit === "fahrenheit");
-    if (selectedLocation) refetch();
   };
 
   const handleSetWindSpeed = (unit: "km/h" | "mph") => {
     setIsImperial(unit === "mph");
-    if (selectedLocation) refetch();
   };
 
-  const handleSetPrecipitation = () => {
-    if (selectedLocation) refetch();
-  };
+  const handleSetPrecipitation = () => {};
 
   const handleSelectLocation = (location: Location) => {
     setSelectedLocation(location);
@@ -142,17 +140,19 @@ export function App() {
           {weatherError && <p className="text-preset-7 mt-2 text-red-400">Couldn&apos;t load weather data. Please try again.</p>}
         </div>
 
-        {(weatherData || isLoadingWeather || isFetchingWeather) && (
+        {showWeatherSkeleton ? (
+          <WeatherDashboardSkeleton />
+        ) : showWeatherDashboard && weatherData ? (
           <div className="flex flex-col gap-x-8 pt-12 lg:flex-row lg:justify-center">
             <section>
-              <CurrentWeather location={displayLocation} weather={weatherData?.current} isLoadingWeather={isLoadingWeather || isFetchingWeather} />
-              {weatherData ? <WeatherStats isImperial={isImperial} weather={weatherData.current} /> : null}
-              {weatherData ? <DailyForecast daily={weatherData.daily} /> : null}
+              <CurrentWeather location={displayLocation} weather={weatherData.current} />
+              <WeatherStats isImperial={isImperial} weather={weatherData.current} />
+              <DailyForecast daily={weatherData.daily} />
             </section>
 
-            {weatherData ? <HourlyForecast daily={weatherData.daily} hourly={weatherData.hourly} onSelectDay={setSelectedDay} selectedDay={selectedDay} /> : null}
+            <HourlyForecast daily={weatherData.daily} hourly={weatherData.hourly} onSelectDay={setSelectedDay} selectedDay={selectedDay} />
           </div>
-        )}
+        ) : null}
       </main>
     </div>
   );

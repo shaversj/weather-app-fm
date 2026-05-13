@@ -3,17 +3,9 @@ import { render, screen } from "@testing-library/react";
 import { CurrentWeather } from "../CurrentWeather";
 
 describe("CurrentWeather", () => {
-  it("shows a loading state when weather data is not available yet", () => {
-    render(<CurrentWeather isLoadingWeather location="Chicago, Illinois" weather={undefined} />);
-
-    expect(screen.getByText("Loading...")).toBeTruthy();
-    expect(screen.getByAltText("Loading")).toBeTruthy();
-  });
-
-  it("shows weather details when loading is complete", () => {
+  it("shows the location, formatted date, and temperature", () => {
     render(
       <CurrentWeather
-        isLoadingWeather={false}
         location="Chicago, Illinois"
         weather={{
           precipitation: 0,
@@ -27,6 +19,7 @@ describe("CurrentWeather", () => {
     );
 
     expect(screen.getByText("Chicago, Illinois")).toBeTruthy();
+    expect(screen.getByText("May 12, 2026")).toBeTruthy();
     expect(screen.getByText("68°")).toBeTruthy();
   });
 });
